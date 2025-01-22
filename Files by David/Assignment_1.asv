@@ -17,7 +17,7 @@ h = 7;
 r = 2;
 
 % Number of elements for Tunnel Mesh
-Nr = 5;
+Nr = 2;
 Nt = 6;
 
 % Coordinates of the triangular element nodes
@@ -49,6 +49,7 @@ m = rho_conc * A*h;
 % Load vector on triangle nodes
 f_e = -g*[0;m/3;0;m/3;0;m/3];
 
-% Pressure
-p = 5;
-[f1x,f1y,f2x,f2y]= PressureLoad(0,0,1,1,L,p);
+% TunnelMesh provided by course
+[Edof,Coord,Ex,Ey,LeftSide_nodes,TopSide_nodes,RightSide_nodes,...
+    BottomSide_nodes]=TunnelMeshGen(H,B,D,b,h,r,Nr,Nt,1);
+
