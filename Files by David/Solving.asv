@@ -94,7 +94,7 @@ body=zeros(nel,2); %herezeroinallelements
  % Q(dof_C)=f_extC;
  Ed=extract_dofs(Edof,a); %extractelementdisplacementsforplotting
  plotpar=[1 1 0];
- sfac=1; %magnificationfactor
+ sfac=0.5; %magnificationfactor
  eldisp2(Ex,Ey,Ed,plotpar,sfac);
 
  %find the stresses in the elements sigx,sigy,tauxy
@@ -107,19 +107,22 @@ body=zeros(nel,2); %herezeroinallelements
  Et(el,:)=Be*a(Edof(el,2:end));
  Es(el,:)=De*Be*a(Edof(el,2:end));
  end
-
- % for plotting of stress in element (here: Es(el,1) = sigma_xx)
+ %forplottingofstressinelement(here:Es(el,1)=sigma_xx)
  for el=1:nel
  Esm(el,1:3)=ones(1,3)*Es(el,1);
  end
  figure(2)
 
  fill(Ex',Ey',Esm')
-title('Stress [Pa]')
+title('axial stress [MPa]')
 colorbar
 axis equal
 % now plot displacement as a function of x for the lower boundary
-[M,I] = max(a,[],"ComparisonMethod","abs");
+w=a([4 6 10 14]);
+x=[0 L/3 2*L/3 L];
+figure(3)
+plot(x,w,'g-')
+xlabel('x [mm]')
 
 
  % end
