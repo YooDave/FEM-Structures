@@ -6,8 +6,6 @@ y2 = 0.25;
 x3 = 0.5;
 y3 = 1;
 
-%hyfujtlgk,jghkujfyjmhfg
-
 % Material and thickness parameters
 E = 30e9;  % Young's modulus [MPa]
 nu = 0.2;   % Poisson's ratio
