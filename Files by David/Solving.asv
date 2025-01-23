@@ -8,8 +8,6 @@ RightSide = RightSide_nodes;
 ndofs = 2*size(Coord,1);
 dof_F= 1:ndofs;
 
-p = Z*rho_water*g;
-
 
 BC_dof = zeros(2*(size(BottomSide,1)) + size(LeftSide,1),1);
 
@@ -49,21 +47,12 @@ temp = size(TopSide,1)+size(RightSide,1);
 f_ext = zeros(ndofs,1);
 
 for i = 1: size(TopSide,1)-1
-    [f1x,f1y,f2x,f2y]= PressureLoad(Coord(TopSide(i),1),Coord(TopSide(i),2),...
-        Coord(TopSide(i+1),1),Coord(TopSide(i+1),2),L,p);
+    [f1x,f1y,f2x,f2y]= PressureLoad(Coord(TopSide(i),1),Coord(TopSide(i,2)),...
+        Coord(TopSide(i+1,1)),Coord(TopSide(i+1,2)),L,p);
     f_ext(2*TopSide(i)-1) = f1x;
     f_ext(2*TopSide(i)) = f1y;
     f_ext(2*TopSide(i+1)-1) = f2x;
     f_ext(2*TopSide(i+1)) = f2y;
-end
-
-for i = 1: size(RightSide,1)-1
-    [f1x,f1y,f2x,f2y]= PressureLoad(Coord(RightSide(i),1),Coord(RightSide(i),2),...
-        Coord(RightSide(i+1),1),Coord(RightSide(i+1),2),L,p);
-    f_ext(2*RightSide(i)-1) = f1x;
-    f_ext(2*RightSide(i)) = f1y;
-    f_ext(2*RightSide(i+1)-1) = f2x;
-    f_ext(2*RightSide(i+1)) = f2y;
 end
 
 a = zeros(ndofs,1);

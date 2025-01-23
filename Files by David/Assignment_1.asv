@@ -6,7 +6,6 @@ nu = 0.2; % Poisson's ratio
 g = 9.81; % Gravitational accel
 rho_conc = 2200; % density concrete kg/m^3
 L = 1; % Thickness in z-direction
-rho_water = 1000; % density water kg/m^3
 
 % Properties in he table
 Z = 45;
@@ -18,8 +17,8 @@ h = 7;
 r = 2;
 
 % Number of elements for Tunnel Mesh
-Nr = 5; % Min 1
-Nt = 10; % Min 5
+Nr = 1; % Min 1
+Nt = 5; % Min 5
 
 % Coordinates of the triangular element nodes
 x1 = 0;
