@@ -1,4 +1,6 @@
 %% Properties
+clear all;clc;
+
 
 % Material properties
 E = 30E9; % Young's modulus

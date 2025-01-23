@@ -17,7 +17,7 @@ a_C = zeros(2*(size(BottomSide,1)) + size(LeftSide,1),1);
 
 temp = 1;
 
-for i = 1:size(BottomSide)
+for i = 1:size(BottomSide,1)
     BC_dof(temp) = 2*BottomSide(i)-1;
     a_C(temp) = 0;
     temp = temp+1;
@@ -26,7 +26,7 @@ for i = 1:size(BottomSide)
     temp = temp+1;
 end
 
-for i = 1:size(LeftSide)
+for i = 1:size(LeftSide,1)
     BC_dof(temp) = 2*LeftSide(i)-1;
     a_C(temp) = 0;
     temp = temp+1;
@@ -51,10 +51,10 @@ f_ext = zeros(ndofs,1);
 for i = 1: size(TopSide,1)-1
     [f1x,f1y,f2x,f2y]= PressureLoad(Coord(TopSide(i),1),Coord(TopSide(i),2),...
         Coord(TopSide(i+1),1),Coord(TopSide(i+1),2),L,p);
-    f_ext(2*TopSide(i)-1) = f1x;
-    f_ext(2*TopSide(i)) = f1y;
-    f_ext(2*TopSide(i+1)-1) = f2x;
-    f_ext(2*TopSide(i+1)) = f2y;
+    f_ext(2*TopSide(i)-1) = f_ext(2*TopSide(i)-1)+ f1x;
+    f_ext(2*TopSide(i)) =f_ext(2*TopSide(i))+ f1y;
+    f_ext(2*TopSide(i+1)-1) = f_ext(2*TopSide(i+1)-1)+ f2x;
+    f_ext(2*TopSide(i+1)) =f_ext(2*TopSide(i+1))+ f2y;
 end
 
 for i = 1: size(RightSide,1)-1
