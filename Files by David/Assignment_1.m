@@ -18,8 +18,8 @@ h = 7;
 r = 2;
 
 % Number of elements for Tunnel Mesh
-Nr = 5; % Min 1
-Nt = 10; % Min 5
+Nr = 1; % Min 1
+Nt = 5; % Min 5
 
 % Coordinates of the triangular element nodes
 x1 = 0;

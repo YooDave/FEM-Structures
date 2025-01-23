@@ -91,7 +91,7 @@ body=zeros(nel,2); %herezeroinallelements
  Q(dof_C)=f_extC;
  Ed=extract_dofs(Edof,a); %extractelementdisplacementsforplotting
  plotpar=[1 1 0];
- sfac=1; %magnificationfactor
+ sfac=0.5; %magnificationfactor
  eldisp2(Ex,Ey,Ed,plotpar,sfac)
  %findthestressesintheelementssigx,sigy,tauxy
  %(codeadaptedforplanestress,ptype=1,mustbemodifiedforptype=2)
