@@ -17,8 +17,8 @@ h = 7;
 r = 2;
 
 % Number of elements for Tunnel Mesh
-Nr = 5; % Min 1
-Nt = 8; % Min 5
+Nr = 1; % Min 1
+Nt = 5; % Min 5
 
 % Coordinates of the triangular element nodes
 x1 = 0;
@@ -29,7 +29,7 @@ x3 = 0.5;
 y3 = 1;
 
 % Area of triangle element using determinant method
-A = 1/2 * det([x1, y1, 1; x2, y2, 1; x3, y3, 1]);
+A = Area(x1, y1, x2, y2, x3, y3);
 
 % D matrix of material properties resulting from Voigt notation
 De = (E / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1-2*nu)/2];
@@ -53,5 +53,5 @@ p = 5;
 [f1x,f1y,f2x,f2y]= PressureLoad(0,0,1,1,L,p);
 
 
-[Edof,Coord,Ex,Ey,LeftSide_nodes,TopSide_nodes,RightSide_nodes,...
-    BottomSide_nodes]=TunnelMeshGen(H,B,D,b,h,r,Nr,Nt,1);
+[Edof,Coord,Ex,Ey,LeftSide_nodes,TopSide_nodes,RightSide_nodes,BottomSide_nodes]...
+    =TunnelMeshGen(H,B,D,b,h,r,Nr,Nt,1);
