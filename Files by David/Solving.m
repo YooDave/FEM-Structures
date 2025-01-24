@@ -79,13 +79,12 @@ body=zeros(nel,2); %herezeroinallelements
  A_total = A_total +Ae;
  Ke=Be'*De*Be*Ae*L;
  m_node=-L*rho_conc*Ae/3;
- fe_ext=[0;m_node;0;m_node;0;m_node];
+ fe_ext=g*[0;m_node;0;m_node;0;m_node];
  %assembling
  K(Edof(el,2:end),Edof(el,2:end))=K(Edof(el,2:end),Edof(el,2:end))+Ke;
  f_ext(Edof(el,2:end))=f_ext(Edof(el,2:end))+fe_ext;
  end
 
- f_ext = f_ext *3;
  a_F= K(dof_F,dof_F)\(f_ext(dof_F)-K(dof_F,dof_C)*a_C);
  f_extC=K(dof_C,dof_F)*a_F+K(dof_C,dof_C)*a_C-f_ext(dof_C);%reactionforces
  a(dof_F,1)=a_F;

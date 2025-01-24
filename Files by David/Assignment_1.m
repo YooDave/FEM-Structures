@@ -21,7 +21,7 @@ r = 2;
 
 % Number of elements for Tunnel Mesh
 Nr = 11; % Min 1
-Nt =22; % Min 5
+Nt = 22; % Min 5
 
 % Coordinates of the triangular element nodes
 x1 = 0;
