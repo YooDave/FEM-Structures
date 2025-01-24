@@ -85,6 +85,7 @@ body=zeros(nel,2); %herezeroinallelements
  f_ext(Edof(el,2:end))=f_ext(Edof(el,2:end))+fe_ext;
  end
 
+ % f_ext = 3* f_ext;
  a_F= K(dof_F,dof_F)\(f_ext(dof_F)-K(dof_F,dof_C)*a_C);
  f_extC=K(dof_C,dof_F)*a_F+K(dof_C,dof_C)*a_C-f_ext(dof_C);%reactionforces
  a(dof_F,1)=a_F;

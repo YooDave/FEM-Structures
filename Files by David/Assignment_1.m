@@ -55,6 +55,9 @@ p = 5;
 % Force resulting through pressure task 1c
 [f1x,f1y,f2x,f2y]= PressureLoad(0,0,1,1,L,p);
 
+% Stress test 1e
+a = [0;0;0.003;0.001;0.002;0.002];
+[Et,Es,sig33] = StressTest(a,De,E,nu);
 
 [Edof,Coord,Ex,Ey,LeftSide_nodes,TopSide_nodes,RightSide_nodes,BottomSide_nodes]...
     =TunnelMeshGen(H,B,D,b,h,r,Nr,Nt,1);
