@@ -1,9 +1,9 @@
-%function [a,b,c,d] = Solving(Ex,Ey,D,h,BottomSide,LeftSide,Coord,Edof)
+function [M,I,a] = Solving(Ex,Ey,De,Z,L,g,BottomSide,LeftSide,RightSide,TopSide,Coord,Edof,rho_water,rho_conc)
 
-BottomSide = BottomSide_nodes;
-LeftSide = LeftSide_nodes;
-TopSide = TopSide_nodes;
-RightSide = RightSide_nodes;
+% BottomSide = BottomSide_nodes;
+% LeftSide = LeftSide_nodes;
+% TopSide = TopSide_nodes;
+% RightSide = RightSide_nodes;
 
 ndofs = 2*size(Coord,1);
 dof_F= 1:ndofs;
@@ -30,8 +30,6 @@ for i = 1:size(LeftSide,1)
     BC_dof(temp) = 2*LeftSide(i)-1;
     a_C(temp) = 0;
     temp = temp+1;
-    % BC_dof(temp) = 2*LeftSide(i);
-    % temp = temp+1;
 end
 
  dof_C=BC_dof';
@@ -71,12 +69,15 @@ a = zeros(ndofs,1);
 body=zeros(nel,2); %herezeroinallelements
  %%Setup andsolveFEequations
  %Assemblestiffnessmatrixand loadvector
+
+ A_total = 0;
+
  for el = 1:nel
  Ae=Area(Ex(el,1),Ey(el,1),Ex(el,2),Ey(el,2),Ex(el,3),Ey(el,3));
  Be=Be_cst_func([Ex(el,1) Ey(el,1)]',[Ex(el,2) Ey(el,2)]',...
  [Ex(el,3) Ey(el,3)]');
-
- Ke=Be'*De*Be*Ae*h;
+ A_total = A_total +Ae;
+ Ke=Be'*De*Be*Ae*L;
  m_node=-L*rho_conc*Ae/3;
  fe_ext=[0;m_node;0;m_node;0;m_node];
  %assembling
@@ -84,6 +85,7 @@ body=zeros(nel,2); %herezeroinallelements
  f_ext(Edof(el,2:end))=f_ext(Edof(el,2:end))+fe_ext;
  end
 
+ f_ext = f_ext *3;
  a_F= K(dof_F,dof_F)\(f_ext(dof_F)-K(dof_F,dof_C)*a_C);
  f_extC=K(dof_C,dof_F)*a_F+K(dof_C,dof_C)*a_C-f_ext(dof_C);%reactionforces
  a(dof_F,1)=a_F;
@@ -94,7 +96,7 @@ body=zeros(nel,2); %herezeroinallelements
  % Q(dof_C)=f_extC;
  Ed=extract_dofs(Edof,a); %extractelementdisplacementsforplotting
  plotpar=[1 1 0];
- sfac=1; %magnificationfactor
+ sfac=1000; %magnificationfactor
  eldisp2(Ex,Ey,Ed,plotpar,sfac);
 
  %find the stresses in the elements sigx,sigy,tauxy
@@ -122,4 +124,4 @@ axis equal
 [M,I] = max(a,[],"ComparisonMethod","abs");
 
 
- % end
+ end

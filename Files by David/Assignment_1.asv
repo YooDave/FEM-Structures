@@ -20,8 +20,8 @@ h = 7;
 r = 2;
 
 % Number of elements for Tunnel Mesh
-Nr = 11; % Min 1
-Nt =22; % Min 5
+Nr = 1; % Min 1
+Nt =5; % Min 5
 
 % Coordinates of the triangular element nodes
 x1 = 0;
@@ -59,8 +59,7 @@ p = 5;
 [Edof,Coord,Ex,Ey,LeftSide_nodes,TopSide_nodes,RightSide_nodes,BottomSide_nodes]...
     =TunnelMeshGen(H,B,D,b,h,r,Nr,Nt,1);
 
-[M,I,a] = Solving(Ex,Ey,De,Z,L,g,BottomSide_nodes,LeftSide_nodes,...
-    RightSide_nodes,TopSide_nodes,Coord,Edof,rho_water,rho_conc);
+[M,I,a] = Solving(Ex,Ey,De,L,BottomSide_nodes,LeftSide_nodes,..RightSide_nodes,TopSide_nodes,Coord,Edof);
 
 
 
