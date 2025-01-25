@@ -57,13 +57,14 @@ p = 5;
 
 % Stress test 1e
 a = [0;0;0.003;0.001;0.002;0.002];
-[Et,Es,sig33] = StressTest(a,De,E,nu);
+[Et,Es,sig33,sigma] = StressTest(a,De,E,nu);
+V = eig(sigma);
 
 [Edof,Coord,Ex,Ey,LeftSide_nodes,TopSide_nodes,RightSide_nodes,BottomSide_nodes]...
     =TunnelMeshGen(H,B,D,b,h,r,Nr,Nt,1);
 
-[M,I,a] = Solving(Ex,Ey,De,Z,L,g,BottomSide_nodes,LeftSide_nodes,...
-    RightSide_nodes,TopSide_nodes,Coord,Edof,rho_water,rho_conc);
+[M,I,a,maxSig] = Solving(Ex,Ey,De,Z,L,g,BottomSide_nodes,LeftSide_nodes,...
+    RightSide_nodes,TopSide_nodes,Coord,Edof,rho_water,rho_conc,nu,E);
 
 
 

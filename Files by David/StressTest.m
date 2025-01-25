@@ -1,4 +1,4 @@
-function [Et,Es,sig33] = StressTest(a,De,E,nu)
+function [Et,Es,sig33,sigma] = StressTest(a,De,E,nu)
 
 Es=zeros(1,3);Et=zeros(1,3);
  Be = Be_cst_func([0;0],[1;0.25],[0.5;1]);
