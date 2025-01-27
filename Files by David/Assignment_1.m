@@ -10,6 +10,9 @@ rho_conc = 2200; % density concrete kg/m^3
 L = 1; % Thickness in z-direction
 rho_water = 1000; % density water kg/m^3
 
+MaxTenStrength = 3.5E6; % Max tensile strength of underwater concrete
+MaxCompStrength = 40E6; % Max compressive strength of underwater concrete
+
 % Properties in he table
 Z = 45;
 B = 15;
@@ -66,5 +69,10 @@ V = eig(sigma);
 [M,I,a,maxSig] = Solving(Ex,Ey,De,Z,L,g,BottomSide_nodes,LeftSide_nodes,...
     RightSide_nodes,TopSide_nodes,Coord,Edof,rho_water,rho_conc,nu,E);
 
+if max(maxSig)>0
+    CompSF = MaxCompStrength/max(maxSig);
+end
+
+TensileSF = -MaxTenStrength/min(maxSig);
 
 
