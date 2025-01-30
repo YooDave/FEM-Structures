@@ -10,23 +10,24 @@ mpar.Hmod=mpar.Emod/20;
 L1=1.6; %m
 L2=1.2; %m
 L3=sqrt(L1^2+L2^2); 
-L=[L1 L2 L3];
+L4 = sqrt(2*L2^2);
+L=[L1 L2 L3 L4];
 
 %%Areas of bars
-A=[6e-4 3e-4 10e-4]; %m^2
+A=[6e-4 3e-4 10e-4 3E-4]; %m^2
 
 %%Element connectivity
-Edof=[1 1 2 5 6;2 5 6 7 8; 3 3 4 5 6];
+Edof=[1 1 2 5 6;2 5 6 7 8; 3 3 4 5 6;4 5 6 9 10];
 
 %%Number of elements
 nelem=size(Edof,1);
 
 %%Position of nodes
-Coord=[0 0; 0 L(2); L(1) 0; L(1) L(2)];
+Coord=[0 0; 0 L(2); L(1) 0; L(1) L(2); L(1)+L(2) L(2)];
 nnodes=size(Coord,1); ndofs=2*nnodes;
 
 %%Dof's in each node
-Dof=[1 2; 3 4; 5 6; 7 8];
+Dof=[1 2; 3 4; 5 6; 7 8; 9 10];
 
 %compute Ex and Eu from Calfem routine
 [Ex,Ey]=coordxtr(Edof,Coord,Dof,2);
@@ -41,7 +42,7 @@ state=zeros(nelem,2);
 state_old=zeros(nelem,2); %old state variables
 
 %define free dof and prescribed dof
-dof_F=[1:ndofs]; dof_C=[1 2 3 4 6 7 8];
+dof_F=[1:ndofs]; dof_C=[1 2 3 4 6 7 8 9 10];
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 %time stepping
@@ -50,7 +51,7 @@ tend=100; %end of time [s]
 t=linspace(0,tend,ntime);
 
 %displacement control of dof 6:
-umax=L2*0.02;
+umax = L2/50;
 uu=umax*sin(pi*t./tend);
 
 %Initialize varaible for post.processing
