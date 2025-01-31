@@ -6,31 +6,39 @@ mpar.Emod=200e9; %Pa
 mpar.Sy=400e6; %Pa
 mpar.Hmod=mpar.Emod/20;
 
-%%Lengths of bars
-L1=1.6; %m
-L2=1.2; %m
-L3=sqrt(L1^2+L2^2); 
-L4 = sqrt(2*L2^2);
-L=[L1 L2 L3 L4];
+%%Lengths 
+Length1 = 2;
+Length2 = 1;
+
+% Length of bars
+L1=Length1; %m
+L2=Length1*sqrt(2); %m
+L3=Length2*2; 
+L=[L1 L2 L3];
 
 %%Areas of bars
-A=[6e-4 3e-4 10e-4 3E-4]; %m^2
+A=[5E-4 5E-4 5E-4]; %m^2
 
 %%Element connectivity
-Edof=[1 1 2 5 6;2 5 6 7 8; 3 3 4 5 6;4 5 6 9 10];
+Edof=[1 1 2 5 6;2 3 4 5 6; 3 7 8 5 6];
 
 %%Number of elements
 nelem=size(Edof,1);
 
 %%Position of nodes
-Coord=[0 0; 0 L(2); L(1) 0; L(1) L(2); L(1)+L(2) L(2)];
+Coord=[0 Length1; 0 0; Length1 Length1; Length1+Length2 0];
 nnodes=size(Coord,1); ndofs=2*nnodes;
 
 %%Dof's in each node
-Dof=[1 2; 3 4; 5 6; 7 8; 9 10];
+Dof=[1 2; 3 4; 5 6; 7 8];
 
 %compute Ex and Eu from Calfem routine
 [Ex,Ey]=coordxtr(Edof,Coord,Dof,2);
+
+%time stepping
+ntime=100; %number of timesteps
+tend=100; %end of time [s]
+t=linspace(0,tend,ntime);
 
 %Initialize displacements
 a=zeros(ndofs,1);
@@ -42,24 +50,20 @@ state=zeros(nelem,2);
 state_old=zeros(nelem,2); %old state variables
 
 %define free dof and prescribed dof
-dof_F=[1:ndofs]; dof_C=[1 2 3 4 6 7 8 9 10];
+dof_F=[1:ndofs]; dof_C=[1 2 3 4 7 8];
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
-%time stepping
-ntime=100; %number of timesteps
-tend=100; %end of time [s]
-t=linspace(0,tend,ntime);
 
 % Test run
 a_total = zeros(ndofs,ntime);
 
 %displacement control of dof 6:
-umax = L2/50;
-uu=umax*sin(pi*t./tend);
+Pmax = 500000;
+PP=Pmax*t./tend;
 
 %Initialize varaible for post.processing
 
-P=zeros(size(uu)); %initialize variable for post-processing
+aa=zeros(size(uu)); %initialize variable for post-processing
 K = spalloc(ndofs,ndofs,20*ndofs); % defines K as a sparse matrix and sets the size
                                    % to (ndof x ndof) with initial zero value
                                    % No. of estimated non-zero entries is 20*ndofs
@@ -74,12 +78,15 @@ stress = zeros(nelem,ntime);
 tol=1e-6;
 
 for i=1:ntime
-    %initial guess of unknown displacement field
-    a(dof_F)=aold(dof_F)+da(dof_F);
+    % %initial guess of unknown displacement field
+    % a(dof_F)=aold(dof_F)+da(dof_F);
+    % 
+    % %%updated prescribed values
+    % a(6)=-uu(i);    
 	
-    %%updated prescribed values
-    a(6)=-uu(i);    
-	
+    fext(5) = PP(i)*sqrt(3)/2;
+    fext(6) = PP(i)*
+
     %Newton iteration to find unknown displacements
     unbal=1e10; niter=0;
     while unbal > tol

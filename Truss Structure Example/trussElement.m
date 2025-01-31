@@ -1,4 +1,4 @@
-function [fe_int, Ke, state] = trussElement(ex, ey, ed, L, A, state_old, mpar)
+function [fe_int, Ke, state, stress] = trussElement(ex, ey, ed, L, A, state_old, mpar)
 
 %compute strain and transformation matrix
 [strain,Lmatrix]=bar2_strain(ex,ey,ed,L);
