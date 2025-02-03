@@ -1,0 +1,132 @@
+%% Material model parameters
+mpar.Emod=210e9; %Pa
+mpar.Sy=400e6; %Pa
+mpar.Hmod=mpar.Emod/20;
+nu = 0.3;
+
+% D matrix of material properties
+De = (mpar.Emod / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1-2*nu)/2];
+
+% Length
+L = 1;
+
+% Height
+h = 1;
+
+% Depth
+d = 1;
+
+% Element connectivitz Edof
+Edof = [1 1 2 5 6 7 8;2 1 2 3 4 5 6];
+
+% No. of elements
+nelem = size(Edof,1);
+
+% Position of nodes
+Coord = [0 0; L 0; L h; 0 h];
+nnodes = size(Coord,1);
+ndofs = 2*nnodes;
+
+% DoFs in each node
+dof = [1 2; 3 4; 5 6; 7 8];
+
+% Compute Ex and Ey from CALFEM routine
+[Ex,Ey]=coordxtr(Edof,Coord,dof,3);
+
+% Initialize displacements
+a=zeros(ndofs,1);
+aold=zeros(ndofs,1);  %old displacements (from previous timestep)
+da=a-aold;
+
+% Define free dofs and constrained dofs
+dof_F=[1:ndofs]; 
+dof_C=[1 2 7 8];
+dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
+
+% Time stepping
+ntime=100; %number of timesteps
+tend=100; %end of time [s]
+t=linspace(0,tend,ntime);
+
+% Test run
+a_total = zeros(ndofs,ntime);
+
+% Initialize variables for post processing
+K = spalloc(ndofs,ndofs,20*ndofs); % defines K as a sparse matrix and sets the size
+                                   % to (ndof x ndof) with initial zero value
+                                   % No. of estimated non-zero entries is 20*ndofs
+
+% Initialize internal and external force
+fint = zeros(ndofs,1);
+fext = fint;
+
+%tolerance value for Newton iteration
+tol=1e-6;
+
+%---------------------------------------------------
+% Newton iteration for solving Non-Linear problem
+%---------------------------------------------------
+
+for i=1:ntime
+    % Initial guess of unknown displacement field
+    a(dof_F)=aold(dof_F)+da(dof_F);
+	
+    % Newton iteration to find unknown displacements
+    unbal=1e10; niter=0;
+    while unbal > tol
+        K=K.*0; fint=fint.*0; %nullify
+		
+        % Loop over elements
+        for iel=1:nelem
+		
+            % Extract element diplacements
+            ed=a(Edof(iel,2:end));
+			
+            Ae=Area(Ex(iel,1),Ey(iel,1),Ex(iel,2),Ey(iel,2),Ex(iel,3),Ey(iel,3));
+            Be=Be_cst_func([Ex(iel,1) Ey(iel,1)]',[Ex(iel,2) Ey(iel,2)]',...
+            [Ex(iel,3) Ey(iel,3)]');
+            Ke=Be'*De*Be*Ae*d;
+            fe_int = Ke*ed;
+
+            % Assembling
+            fint(Edof(iel,2:end))=fint(Edof(iel,2:end))+fe_int;
+			
+            K(Edof(iel,2:end),Edof(iel,2:end))=...
+                K(Edof(iel,2:end),Edof(iel,2:end))+Ke;
+				
+        end
+        % Unbalance equation
+        g_F=fint(dof_F)-fext(dof_F);
+		
+        unbal=norm(g_F);
+        if unbal > tol
+            % Newton update
+            a(dof_F)=a(dof_F)-K(dof_F,dof_F)\g_F;
+        end 
+		
+        niter=niter+1; %update iter counter
+        [niter unbal]  %print on screen
+		
+        if niter>20
+            disp('no convergence in Newton iteration')
+            pause
+        end
+        
+    end
+    
+    %save data for post-processing and update state variables now
+    % (when Newton iteration has converged in the time increment)
+    P(i)=-fint(6);
+    % state_old=state;
+    %save how large the displacement has changed during the timesstep
+    % to get a good initial guess for next timesteps
+    da=a-aold;
+    aold = a;
+    a_total(:,i) = a;    
+end
+
+
+
+
+
+
