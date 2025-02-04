@@ -7,7 +7,7 @@ nu = 0.3;
 dens = 7850;
 
 % External force P acting on node 3
-P = -5000; % Force in [N]
+P = 5000; % Force in [N]
 
 % D matrix of material properties
 De = (mpar.Emod / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1-2*nu)/2];
@@ -43,9 +43,10 @@ a=zeros(ndofs,1);
 aold=zeros(ndofs,1);  %old displacements (from previous timestep)
 da=a-aold;
 
+
 % Define free dofs and constrained dofs
 dof_F=[1:ndofs]; 
-dof_C=[1 2 7 8];
+dof_C=[1 7 8];
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
@@ -122,15 +123,14 @@ for i=1:ntime
             disp('no convergence in Newton iteration')
             pause
         end
+
+        a_F = a(dof_F);
+        a_C = a(dof_C);
+        f_extC = K(dof_C, dof_F)*a_F + K(dof_C, dof_C)*a_C - fext(dof_C); %reaction forces
         
     end
     
-    %save data for post-processing and update state variables now
-    % (when Newton iteration has converged in the time increment)
-    P(i)=-fint(6);
-    % state_old=state;
-    %save how large the displacement has changed during the timesstep
-    % to get a good initial guess for next timesteps
+
     da=a-aold;
     aold = a;
     a_total(:,i) = a;    
