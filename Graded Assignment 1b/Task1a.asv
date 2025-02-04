@@ -3,6 +3,10 @@ mpar.Emod=210e9; %Pa
 mpar.Sy=400e6; %Pa
 mpar.Hmod=mpar.Emod/20;
 nu = 0.3;
+dens = 7850;
+
+% External force P acting on node 3
+P = -5000; % Force in [N]
 
 % D matrix of material properties
 De = (mpar.Emod / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1-2*nu)/2];
@@ -60,6 +64,8 @@ K = spalloc(ndofs,ndofs,20*ndofs); % defines K as a sparse matrix and sets the s
 fint = zeros(ndofs,1);
 fext = fint;
 
+f_ext = [0;0;0;0;0;P;0;0];
+
 %tolerance value for Newton iteration
 tol=1e-6;
 
@@ -74,7 +80,9 @@ for i=1:ntime
     % Newton iteration to find unknown displacements
     unbal=1e10; niter=0;
     while unbal > tol
-        K=K.*0; fint=fint.*0; %nullify
+        K=K.*0; 
+        fint=fint.*0; %nullify
+        fext = f_ext;
 		
         % Loop over elements
         for iel=1:nelem
@@ -87,6 +95,7 @@ for i=1:ntime
             [Ex(iel,3) Ey(iel,3)]');
             Ke=Be'*De*Be*Ae*d;
             fe_int = Ke*ed;
+            fe_ext = d*dens*Ae*g*[]
 
             % Assembling
             fint(Edof(iel,2:end))=fint(Edof(iel,2:end))+fe_int;
