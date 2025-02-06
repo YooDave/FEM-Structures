@@ -7,9 +7,9 @@ nu = 0.3;
 dens = 7850;
 
 % External force P acting on node 3
-P = 5000; % Force in [N]
+P = -5000; % Force in [N]
 
-% D matrix of material properties
+% D matrix of material properties for plane strain
 De = (mpar.Emod / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1-2*nu)/2];
 
 % Length
@@ -71,6 +71,11 @@ f_ext = [0;0;0;0;0;P;0;0];
 %tolerance value for Newton iteration
 tol=1e-6;
 
+% Initializing stress and strain matrices
+Et = zeros(nelem,3); % Strain
+Es = zeros(nelem,3); % Stress
+
+
 %---------------------------------------------------
 % Newton iteration for solving Non-Linear problem
 %---------------------------------------------------
@@ -97,7 +102,7 @@ for i=1:ntime
             [Ex(iel,3) Ey(iel,3)]');
             Ke=Be'*De*Be*Ae*d;
             fe_int = Ke*ed;
-            fe_ext = d*dens*Ae*g*1/sqrt(3) *[0;-1;0;-1;0;-1];
+            fe_ext = d*dens*Ae*g*1/3 *[0;-1;0;-1;0;-1];
 
             % Assembling
             fint(Edof(iel,2:end))=fint(Edof(iel,2:end))+fe_int;
@@ -105,6 +110,10 @@ for i=1:ntime
 			
             K(Edof(iel,2:end),Edof(iel,2:end))=...
                 K(Edof(iel,2:end),Edof(iel,2:end))+Ke;
+
+            % Calculation of strain and stress
+            Et(iel,:) = Be*a(Edof(iel,2:end)); % Strain
+            Es(iel,:) = De*Be*a(Edof(iel,2:end)); % Stress
 				
         end
         % Unbalance equation
@@ -124,10 +133,9 @@ for i=1:ntime
             pause
         end
 
-        a_F = a(dof_F);
-        a_C = a(dof_C);
-        f_extC = K(dof_C, dof_F)*a_F + K(dof_C, dof_C)*a_C - fext(dof_C); %reaction forces
-        
+        f_extC = fint(dof_C)- fext(dof_C);
+
+
     end
     
 
