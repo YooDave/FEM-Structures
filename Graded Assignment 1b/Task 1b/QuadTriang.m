@@ -21,7 +21,7 @@ dN4_dxi=gradient(N4,xi);
 dN5_dxi=gradient(N5,xi);
 dN6_dxi=gradient(N6,xi);
 
-% Define node positions symbolicallz
+% Define node positions symbolically
 xe1=sym('xe1',[2,1],'real');
 xe2=sym('xe2',[2,1],'real');
 xe3=sym('xe3',[2,1],'real');
@@ -43,6 +43,12 @@ dN4 = simplify(inv(Fisop)'*dN4_dxi);
 dN5 = simplify(inv(Fisop)'*dN5_dxi);
 dN6 = simplify(inv(Fisop)'*dN6_dxi);
 
+B = [dN1(1), 0, dN2(1), 0, dN3(1), 0, dN4(1), 0, dN5(1), 0, dN6(1), 0 ;
+0, dN1(2), 0, dN2(2), 0, dN3(2), 0, dN4(2), 0, dN5(2), 0, dN6(2);
+dN1(2), dN1(1), dN2(2), dN2(1), dN3(2), dN3(1), dN4(2), dN4(1), dN5(2), dN5(1), dN6(2), dN6(1)];
+
+matlabFunction(Be,'File','Be_quad_func','Vars',{xe1,xe2,xe3,xe4,xe5,xe6});
+
 % Calculate D-matrix using CALFEM
 mpar.Emod = 200.e3; % Youngs modulus [MPa]
 mpar.v = 0.3; % Poisson's ratio [-]
@@ -56,5 +62,4 @@ H = 1/6; % Integration weight
 IP = [1/6, 1/6; 1/6, 2/3; 2/3, 1/6]; % Integration points
 
 
-matlabFunction(Be,'File','Be_cst_func','Vars',{xe1,xe2,xe3,xe4,xe5,xe6});
 

@@ -10,16 +10,16 @@ dens = 7850;
 grav = 0;
 
 % External force P acting on node 3
-P = -5000; % Force in [N]
+P = -20000; % Force in [N]
 
 % D matrix of material properties for plane strain
 De = (mpar.Emod / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1-2*nu)/2];
 
 % Length
-L = 1;
+L = 2;
 
 % Height
-h = 1;
+h = 2;
 
 % Depth
 d = 1;
