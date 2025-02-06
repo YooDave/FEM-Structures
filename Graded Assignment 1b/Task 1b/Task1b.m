@@ -6,17 +6,20 @@ mpar.Hmod=mpar.Emod/20;
 nu = 0.3;
 dens = 7850;
 
-% External force P acting on node 3
-P = -5000; % Force in [N]
+% Gravitation (1=yes; 0=no)
+grav = 0;
 
-% D matrix of material properties
+% External force P acting on node 3
+P = -20000; % Force in [N]
+
+% D matrix of material properties for plane strain
 De = (mpar.Emod / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1-2*nu)/2];
 
 % Length
-L = 1;
+L = 2;
 
 % Height
-h = 1;
+h = 2;
 
 % Depth
 d = 1;
@@ -43,9 +46,10 @@ a=zeros(ndofs,1);
 aold=zeros(ndofs,1);  %old displacements (from previous timestep)
 da=a-aold;
 
+
 % Define free dofs and constrained dofs
 dof_F=[1:ndofs]; 
-dof_C=[1 2 7 8];
+dof_C=[1 7 8];
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
@@ -65,10 +69,16 @@ K = spalloc(ndofs,ndofs,20*ndofs); % defines K as a sparse matrix and sets the s
 fint = zeros(ndofs,1);
 fext = fint;
 
+% Vector of applied external forces
 f_ext = [0;0;0;0;0;P;0;0];
 
 %tolerance value for Newton iteration
 tol=1e-6;
+
+% Initializing stress and strain matrices
+Et = zeros(nelem,3); % Strain
+Es = zeros(nelem,3); % Stress
+
 
 %---------------------------------------------------
 % Newton iteration for solving Non-Linear problem
@@ -91,12 +101,8 @@ for i=1:ntime
             % Extract element diplacements
             ed=a(Edof(iel,2:end));
 			
-            Ae=Area(Ex(iel,1),Ey(iel,1),Ex(iel,2),Ey(iel,2),Ex(iel,3),Ey(iel,3));
-            Be=Be_cst_func([Ex(iel,1) Ey(iel,1)]',[Ex(iel,2) Ey(iel,2)]',...
-            [Ex(iel,3) Ey(iel,3)]');
-            Ke=Be'*De*Be*Ae*d;
-            fe_int = Ke*ed;
-            fe_ext = d*dens*Ae*g*1/sqrt(3) *[0;-1;0;-1;0;-1];
+            % Element calculations for CST
+            [fe_int,Ke] = QuadTriang(ed,Ex(iel,:),Ey(iel,:),De,d);
 
             % Assembling
             fint(Edof(iel,2:end))=fint(Edof(iel,2:end))+fe_int;
@@ -104,6 +110,10 @@ for i=1:ntime
 			
             K(Edof(iel,2:end),Edof(iel,2:end))=...
                 K(Edof(iel,2:end),Edof(iel,2:end))+Ke;
+
+            % Calculation of strain and stress
+            Et(iel,:) = Be*a(Edof(iel,2:end)); % Strain
+            Es(iel,:) = De*Be*a(Edof(iel,2:end)); % Stress
 				
         end
         % Unbalance equation
@@ -122,18 +132,13 @@ for i=1:ntime
             disp('no convergence in Newton iteration')
             pause
         end
-        
+
+        f_extC = fint(dof_C)- fext(dof_C);
+
+
     end
     
-    a_F = K(dof_F, dof_F)\( f_ext(dof_F) - K(dof_F, dof_C)*a_C );
-    f_extC = K(dof_C, dof_F)*a_F + K(dof_C, dof_C)*a_C - f_ext(dof_C); %reaction forces
 
-    %save data for post-processing and update state variables now
-    % (when Newton iteration has converged in the time increment)
-    P(i)=-fint(6);
-    % state_old=state;
-    %save how large the displacement has changed during the timesstep
-    % to get a good initial guess for next timesteps
     da=a-aold;
     aold = a;
     a_total(:,i) = a;    
@@ -141,6 +146,9 @@ end
 
 
 
-
+% Analytical solution of cantilever beam
+% https://www.engineeringtoolbox.com/cantilever-beams-d_1848.html
+I = 1/12 * d*h^3;
+defl = abs(P)*L^3 /(3*mpar.Emod*I);
 
 
