@@ -1,4 +1,4 @@
-function [fe_int,Ke] = QuadTriang(ed,Ex,Ey,De,d)
+function [fe_int,Ke,fe_ext] = QuadTriang(ed,Ex,Ey,De,d)
 
 Ke = zeros(12);
 H = 1/6;
@@ -8,10 +8,11 @@ for i = 1:3
     [Ex(3) Ey(3)]',[Ex(4) Ey(4)]',[Ex(5) Ey(5)]',...
     [Ex(6) Ey(6)]');
 
-    Ke = Ke + Be(i)' * De*Be(i)*d*det(Fisop(i))*H;
+    Ke = Ke + Be(:,:,i)' * De*Be(:,:,i)*d*det(Fisop(:,:,i))*H;
 end
 
 fe_int = Ke*ed;
+fe_ext = zeros(12,1);
 
 % Calculate D-matrix using CALFEM
 % mpar.Emod = 200.e3; % Youngs modulus [MPa]

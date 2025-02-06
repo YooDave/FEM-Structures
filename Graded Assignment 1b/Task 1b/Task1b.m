@@ -13,6 +13,8 @@ grav = 0;
 P = -20000; % Force in [N]
 
 % D matrix of material properties for plane strain
+% ptype=2; %ptype=1: plane stress ||| 2: plane strain ||| 3:axisym ||| 4: 3d
+% D=hooke(ptype,mpar.Emod,nu); % Constitutive matrix - plane stress
 De = (mpar.Emod / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1-2*nu)/2];
 
 % Length
@@ -24,22 +26,27 @@ h = 2;
 % Depth
 d = 1;
 
-% Element connectivitz Edof
-Edof = [1 1 2 5 6 7 8;2 1 2 3 4 5 6];
+% Element connectivity Edof
+Edof = [1 1 2 5 6 13 14 11 12 15 16 17 18;...
+    2 1 2 3 4 5 6 7 8 9 10 11 12];
 
 % No. of elements
 nelem = size(Edof,1);
 
 % Position of nodes
-Coord = [0 0; L 0; L h; 0 h];
+Coord = [0 0; L 0; L h; L/2 0; L h/2; L/2 h/2; 0 h; L/2 h; 0 h/2];
 nnodes = size(Coord,1);
 ndofs = 2*nnodes;
 
 % DoFs in each node
-dof = [1 2; 3 4; 5 6; 7 8];
+dof = zeros(nnodes,2);
+for i = 1:nnodes
+    dof(i,1) = 2*i -1;
+    dof(i,2) = 2*i;
+end
 
 % Compute Ex and Ey from CALFEM routine
-[Ex,Ey]=coordxtr(Edof,Coord,dof,3);
+[Ex,Ey]=coordxtr(Edof,Coord,dof,6);
 
 % Initialize displacements
 a=zeros(ndofs,1);
@@ -70,7 +77,8 @@ fint = zeros(ndofs,1);
 fext = fint;
 
 % Vector of applied external forces
-f_ext = [0;0;0;0;0;P;0;0];
+f_ext = fint;
+f_ext(6) = P;
 
 %tolerance value for Newton iteration
 tol=1e-6;
@@ -93,7 +101,7 @@ for i=1:ntime
     while unbal > tol
         K=K.*0; 
         fint=fint.*0; %nullify
-        fext = f_ext;
+        fext = fext.*0;
 		
         % Loop over elements
         for iel=1:nelem
@@ -102,7 +110,7 @@ for i=1:ntime
             ed=a(Edof(iel,2:end));
 			
             % Element calculations for CST
-            [fe_int,Ke] = QuadTriang(ed,Ex(iel,:),Ey(iel,:),De,d);
+            [fe_int,Ke,fe_ext] = QuadTriang(ed,Ex(iel,:),Ey(iel,:),De,d);
 
             % Assembling
             fint(Edof(iel,2:end))=fint(Edof(iel,2:end))+fe_int;
@@ -112,8 +120,8 @@ for i=1:ntime
                 K(Edof(iel,2:end),Edof(iel,2:end))+Ke;
 
             % Calculation of strain and stress
-            Et(iel,:) = Be*a(Edof(iel,2:end)); % Strain
-            Es(iel,:) = De*Be*a(Edof(iel,2:end)); % Stress
+            % Et(iel,:) = Be*a(Edof(iel,2:end)); % Strain
+            % Es(iel,:) = De*Be*a(Edof(iel,2:end)); % Stress
 				
         end
         % Unbalance equation
