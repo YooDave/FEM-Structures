@@ -6,6 +6,9 @@ mpar.Hmod=mpar.Emod/20;
 nu = 0.3;
 dens = 7850;
 
+% Gravitation (1=yes; 0=no)
+grav = 0;
+
 % External force P acting on node 3
 P = -5000; % Force in [N]
 
@@ -66,6 +69,7 @@ K = spalloc(ndofs,ndofs,20*ndofs); % defines K as a sparse matrix and sets the s
 fint = zeros(ndofs,1);
 fext = fint;
 
+% Vector of applied external forces
 f_ext = [0;0;0;0;0;P;0;0];
 
 %tolerance value for Newton iteration
@@ -97,12 +101,8 @@ for i=1:ntime
             % Extract element diplacements
             ed=a(Edof(iel,2:end));
 			
-            Ae=Area(Ex(iel,1),Ey(iel,1),Ex(iel,2),Ey(iel,2),Ex(iel,3),Ey(iel,3));
-            Be=Be_cst_func([Ex(iel,1) Ey(iel,1)]',[Ex(iel,2) Ey(iel,2)]',...
-            [Ex(iel,3) Ey(iel,3)]');
-            Ke=Be'*De*Be*Ae*d;
-            fe_int = Ke*ed;
-            fe_ext = d*dens*Ae*g*1/3 *[0;-1;0;-1;0;-1];
+            % Element calculations for CST
+            [Ae,Be,Ke,fe_int,fe_ext] = CST_Calc(ed,iel,Ex,Ey,De,d,dens,g,grav);
 
             % Assembling
             fint(Edof(iel,2:end))=fint(Edof(iel,2:end))+fe_int;
@@ -146,6 +146,9 @@ end
 
 
 
-
+% Analytical solution of cantilever beam
+% https://www.engineeringtoolbox.com/cantilever-beams-d_1848.html
+I = 1/12 * d*h^3;
+defl = abs(P)*L^3 /(3*mpar.Emod*I);
 
 
