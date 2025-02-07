@@ -10,7 +10,7 @@ dens = 7850;
 grav = 0;
 
 % External force P acting on node 3
-P = -20000; % Force in [N]
+P = -5000; % Force in [N]
 
 % D matrix of material properties for plane strain
 % ptype=2; %ptype=1: plane stress ||| 2: plane strain ||| 3:axisym ||| 4: 3d
@@ -56,11 +56,11 @@ da=a-aold;
 
 % Define free dofs and constrained dofs
 dof_F=[1:ndofs]; 
-dof_C=[1 7 8];
+dof_C=[1 2 13 14 17 18];
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
-ntime=100; %number of timesteps
+ntime=40; %number of timesteps
 tend=100; %end of time [s]
 t=linspace(0,tend,ntime);
 
@@ -101,7 +101,7 @@ for i=1:ntime
     while unbal > tol
         K=K.*0; 
         fint=fint.*0; %nullify
-        fext = fext.*0;
+        fext = f_ext;
 		
         % Loop over elements
         for iel=1:nelem
@@ -136,9 +136,9 @@ for i=1:ntime
         niter=niter+1; %update iter counter
         [niter unbal]  %print on screen
 		
-        if niter>20
+        if niter>400
             disp('no convergence in Newton iteration')
-            pause
+            break
         end
 
         f_extC = fint(dof_C)- fext(dof_C);

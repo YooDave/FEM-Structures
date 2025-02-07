@@ -10,7 +10,7 @@ dens = 7850;
 grav = 0;
 
 % External force P acting on node 3
-P = -20000; % Force in [N]
+P = -0; % Force in [N]
 
 % D matrix of material properties for plane strain
 De = (mpar.Emod / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1-2*nu)/2];
@@ -49,7 +49,7 @@ da=a-aold;
 
 % Define free dofs and constrained dofs
 dof_F=[1:ndofs]; 
-dof_C=[1 7 8];
+dof_C=[1 2 7 8];
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
@@ -60,6 +60,10 @@ t=linspace(0,tend,ntime);
 % Test run
 a_total = zeros(ndofs,ntime);
 
+% Displacement control
+amax = 1E-3;
+aa = linspace(0,amax,ntime);
+
 % Initialize variables for post processing
 K = spalloc(ndofs,ndofs,20*ndofs); % defines K as a sparse matrix and sets the size
                                    % to (ndof x ndof) with initial zero value
@@ -68,6 +72,7 @@ K = spalloc(ndofs,ndofs,20*ndofs); % defines K as a sparse matrix and sets the s
 % Initialize internal and external force
 fint = zeros(ndofs,1);
 fext = fint;
+F=zeros(size(aa));
 
 % Vector of applied external forces
 f_ext = [0;0;0;0;0;P;0;0];
@@ -87,6 +92,8 @@ Es = zeros(nelem,3); % Stress
 for i=1:ntime
     % Initial guess of unknown displacement field
     a(dof_F)=aold(dof_F)+da(dof_F);
+
+    a(6) = aa(i);
 	
     % Newton iteration to find unknown displacements
     unbal=1e10; niter=0;
@@ -138,12 +145,22 @@ for i=1:ntime
 
     end
     
+    F(i)=-fint(6);
 
     da=a-aold;
     aold = a;
     a_total(:,i) = a;    
+    plot(aa,F,'-') %for plotting during simulation
+    drawnow
 end
 
+
+close all
+plot(aa,F,'linewidth',2)
+set(gca,'FontSize',14,'fontname','Times New Roman')
+xlabel('$u$ [m]','FontSize',16,'interpreter','latex')
+ylabel('$F$ [N]','FontSize',16,'interpreter','latex')
+grid on
 
 
 % Analytical solution of cantilever beam

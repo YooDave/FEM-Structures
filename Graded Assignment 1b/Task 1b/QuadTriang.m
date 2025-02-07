@@ -1,14 +1,20 @@
 function [fe_int,Ke,fe_ext] = QuadTriang(ed,Ex,Ey,De,d)
 
 Ke = zeros(12);
+fe_int = zeros(12,1);
 H = 1/6;
 
-for i = 1:3
-    [Be,Fisop] = Be_quad_func([Ex(1) Ey(1)]',[Ex(2) Ey(2)]',...
+[Be,Fisop] = Be_quad_func([Ex(1) Ey(1)]',[Ex(2) Ey(2)]',...
     [Ex(3) Ey(3)]',[Ex(4) Ey(4)]',[Ex(5) Ey(5)]',...
     [Ex(6) Ey(6)]');
 
+for i = 1:3    
+    % Calculation of strain and stress
+    Et = Be(:,:,i)*ed;
+    Es = De*Be(:,:,i) * ed;
+
     Ke = Ke + Be(:,:,i)' * De*Be(:,:,i)*d*det(Fisop(:,:,i))*H;
+    % fe_int = fe_int + Be(:,:,i).'*Es * d* det(Fisop(:,:,i))*H;
 end
 
 fe_int = Ke*ed;
