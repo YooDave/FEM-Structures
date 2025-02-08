@@ -49,12 +49,12 @@ da=a-aold;
 
 % Define free dofs and constrained dofs
 dof_F=[1:ndofs]; 
-dof_C=[1 2 7 8];
+dof_C=[1 2 7 8 6];
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
 ntime=100; %number of timesteps
-tend=100; %end of time [s]
+tend=ntime; %end of time [s]
 t=linspace(0,tend,ntime);
 
 % Test run
@@ -93,15 +93,16 @@ for i=1:ntime
     % Initial guess of unknown displacement field
     a(dof_F)=aold(dof_F)+da(dof_F);
 
-    a(6) = aa(i);
+    a(6) = -aa(i);
 	
     % Newton iteration to find unknown displacements
     unbal=1e10; niter=0;
     while unbal > tol
         K=K.*0; 
         fint=fint.*0; %nullify
-        fext = f_ext;
-		
+        % fext = f_ext;
+		fext = fext.*0;
+
         % Loop over elements
         for iel=1:nelem
 		
@@ -137,7 +138,7 @@ for i=1:ntime
 		
         if niter>20
             disp('no convergence in Newton iteration')
-            pause
+            break
         end
 
         f_extC = fint(dof_C)- fext(dof_C);
@@ -158,10 +159,11 @@ end
 close all
 plot(aa,F,'linewidth',2)
 set(gca,'FontSize',14,'fontname','Times New Roman')
-xlabel('$u$ [m]','FontSize',16,'interpreter','latex')
+xlabel('$a$ [m]','FontSize',16,'interpreter','latex')
 ylabel('$F$ [N]','FontSize',16,'interpreter','latex')
 grid on
 
+P = F(end);
 
 % Analytical solution of cantilever beam
 % https://www.engineeringtoolbox.com/cantilever-beams-d_1848.html
