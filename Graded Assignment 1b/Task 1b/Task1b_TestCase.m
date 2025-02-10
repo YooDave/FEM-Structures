@@ -1,10 +1,12 @@
-%% Material model parameters
+%% Test case task 1b
+
+% Material model parameters
 g = 9.81; % Gravitational acceleration
-mpar.Emod=210e9; %Pa
-mpar.Sy=400e6; %Pa
-mpar.Hmod=mpar.Emod/20;
-nu = 0.3;
-dens = 7850;
+mpar.Emod=80E9; %Pa
+%mpar.Sy=400e6; %Pa
+% mpar.Hmod=mpar.Emod/20;
+nu = 0.2;
+% dens = 7850;
 
 % Gravitation (1=yes; 0=no)
 grav = 0;
@@ -13,56 +15,57 @@ grav = 0;
 P = -0; % Force in [N]
 
 % D matrix of material properties for plane strain
+% ptype=1; %ptype=1: plane stress ||| 2: plane strain ||| 3:axisym ||| 4: 3d
+% De=hooke(ptype,mpar.Emod,nu); % Constitutive matrix - plane stress
 De = (mpar.Emod / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1-2*nu)/2];
 
-% Length
-L = 2;
 
-% Height
-h = 2;
 
-% Depth
-d = 1;
+% Thickness
+d = 10*10E-3;
 
 % Element connectivity Edof
-Edof = [1 1 2 5 6 7 8;2 1 2 3 4 5 6];
+Edof = [1 1 2 3 4 5 6 7 8 9 10 11 12];
 
 % No. of elements
 nelem = size(Edof,1);
 
 % Position of nodes
-Coord = [0 0; L 0; L h; 0 h];
+Coord = 10E-3* [1 0; 1 0.5; 0 0.5; 1 0.25; 0.5 0.5; 0.5 0.25];
 nnodes = size(Coord,1);
 ndofs = 2*nnodes;
 
 % DoFs in each node
-dof = [1 2; 3 4; 5 6; 7 8];
+dof = zeros(nnodes,2);
+for i = 1:nnodes
+    dof(i,1) = 2*i -1;
+    dof(i,2) = 2*i;
+end
 
 % Compute Ex and Ey from CALFEM routine
-[Ex,Ey]=coordxtr(Edof,Coord,dof,3);
+[Ex,Ey]=coordxtr(Edof,Coord,dof,6);
 
 % Initialize displacements
 a=zeros(ndofs,1);
 aold=zeros(ndofs,1);  %old displacements (from previous timestep)
 da=a-aold;
 
+% Define displacement for test case
+aa = 10E-5*10E-3 * [-14.014;0;-14.014;28.028;0;28.028;-14.014;14.014;-7.007;28.028;-7.007;14.014];
+
 
 % Define free dofs and constrained dofs
 dof_F=[1:ndofs]; 
-dof_C=[1 2 7 8 6];
+dof_C=[2 5];
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
-ntime=100; %number of timesteps
+ntime=1; %number of timesteps
 tend=ntime; %end of time [s]
 t=linspace(0,tend,ntime);
 
 % Test run
 a_total = zeros(ndofs,ntime);
-
-% Displacement control
-amax = 1E-3;
-aa = linspace(0,amax,ntime);
 
 % Initialize variables for post processing
 K = spalloc(ndofs,ndofs,20*ndofs); % defines K as a sparse matrix and sets the size
@@ -75,7 +78,8 @@ fext = fint;
 F=zeros(size(aa));
 
 % Vector of applied external forces
-f_ext = [0;0;0;0;0;P;0;0];
+f_ext = fint;
+
 
 %tolerance value for Newton iteration
 tol=1e-6;
@@ -92,17 +96,16 @@ Es = zeros(nelem,3); % Stress
 for i=1:ntime
     % Initial guess of unknown displacement field
     a(dof_F)=aold(dof_F)+da(dof_F);
+	a = aa;
 
-    a(6) = -aa(i);
-	
+
     % Newton iteration to find unknown displacements
     unbal=1e10; niter=0;
     while unbal > tol
         K=K.*0; 
         fint=fint.*0; %nullify
-        % fext = f_ext;
-		fext = fext.*0;
-
+        fext = f_ext;
+		
         % Loop over elements
         for iel=1:nelem
 		
@@ -110,7 +113,7 @@ for i=1:ntime
             ed=a(Edof(iel,2:end));
 			
             % Element calculations for CST
-            [Ae,Be,Ke,fe_int,fe_ext] = CST_Calc(ed,iel,Ex,Ey,De,d,dens,g,grav);
+            [fe_int,Ke,fe_ext] = QuadTriang(ed,Ex(iel,:),Ey(iel,:),De,d);
 
             % Assembling
             fint(Edof(iel,2:end))=fint(Edof(iel,2:end))+fe_int;
@@ -120,8 +123,8 @@ for i=1:ntime
                 K(Edof(iel,2:end),Edof(iel,2:end))+Ke;
 
             % Calculation of strain and stress
-            Et(iel,:) = Be*a(Edof(iel,2:end)); % Strain
-            Es(iel,:) = De*Be*a(Edof(iel,2:end)); % Stress
+            % Et(iel,:) = Be*a(Edof(iel,2:end)); % Strain
+            % Es(iel,:) = De*Be*a(Edof(iel,2:end)); % Stress
 				
         end
         % Unbalance equation
@@ -136,7 +139,7 @@ for i=1:ntime
         niter=niter+1; %update iter counter
         [niter unbal]  %print on screen
 		
-        if niter>20
+        if niter>400
             disp('no convergence in Newton iteration')
             break
         end
@@ -146,28 +149,28 @@ for i=1:ntime
 
     end
     
-    F(i)=-fint(6);
+    F(i) = -fint(6);
 
     da=a-aold;
     aold = a;
     a_total(:,i) = a;    
-    plot(aa,F,'-') %for plotting during simulation
-    drawnow
+    % plot(aa,F,'-') %for plotting during simulation
+    % drawnow
 end
 
+% close all
+% plot(aa,F,'linewidth',2)
+% set(gca,'FontSize',14,'fontname','Times New Roman')
+% xlabel('$a$ [m]','FontSize',16,'interpreter','latex')
+% ylabel('$F$ [N]','FontSize',16,'interpreter','latex')
+% grid on
+% 
+% P = F(end);
 
-close all
-plot(aa,F,'linewidth',2)
-set(gca,'FontSize',14,'fontname','Times New Roman')
-xlabel('$a$ [m]','FontSize',16,'interpreter','latex')
-ylabel('$F$ [N]','FontSize',16,'interpreter','latex')
-grid on
-
-P = F(end);
 
 % Analytical solution of cantilever beam
 % https://www.engineeringtoolbox.com/cantilever-beams-d_1848.html
-I = 1/12 * d*h^3;
-defl = abs(P)*L^3 /(3*mpar.Emod*I);
+% I = 1/12 * d*h^3;
+% defl = abs(P)*L^3 /(3*mpar.Emod*I);
 
 

@@ -13,7 +13,7 @@ for i = 1:3
     Et = Be(:,:,i)*ed;
     Es = De*Be(:,:,i) * ed;
 
-    Ke = Ke + Be(:,:,i)' * De*Be(:,:,i)*d*det(Fisop(:,:,i))*H;
+    Ke = Ke + Be(:,:,i)' * De*Be(:,:,i)*H*d*det(Fisop(:,:,i));
     % fe_int = fe_int + Be(:,:,i).'*Es * d* det(Fisop(:,:,i))*H;
 end
 
