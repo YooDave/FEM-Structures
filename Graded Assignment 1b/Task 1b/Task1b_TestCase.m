@@ -22,7 +22,7 @@ De = (mpar.Emod / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1
 
 
 % Thickness
-d = 10*10E-3;
+d = 10*1E-3;
 
 % Element connectivity Edof
 Edof = [1 1 2 3 4 5 6 7 8 9 10 11 12];
@@ -31,7 +31,7 @@ Edof = [1 1 2 3 4 5 6 7 8 9 10 11 12];
 nelem = size(Edof,1);
 
 % Position of nodes
-Coord = 10E-3* [1 0; 1 0.5; 0 0.5; 1 0.25; 0.5 0.5; 0.5 0.25];
+Coord = 1E-3* [1 0; 1 0.5; 0 0.5; 1 0.25; 0.5 0.5; 0.5 0.25];
 nnodes = size(Coord,1);
 ndofs = 2*nnodes;
 
@@ -51,7 +51,7 @@ aold=zeros(ndofs,1);  %old displacements (from previous timestep)
 da=a-aold;
 
 % Define displacement for test case
-aa = 10E-5*10E-3 * [-14.014;0;-14.014;28.028;0;28.028;-14.014;14.014;-7.007;28.028;-7.007;14.014];
+aa = (1E-5)* (1E-3) * [-14.014;0;-14.014;28.028;0;28.028;-14.014;14.014;-7.007;28.028;-7.007;14.014];
 
 
 % Define free dofs and constrained dofs
