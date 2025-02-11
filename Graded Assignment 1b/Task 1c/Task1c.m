@@ -120,7 +120,7 @@ for i=1:ntime
             ed=a(Edof(iel,2:end));
 			
             % Element calculations for CST
-            [fe_int,Ke,fe_ext] = QuadTriang(ed,Ex(iel,:),Ey(iel,:),De,d);
+            [fe_int,Ke,fe_ext] = ThermQuadTriang(ed,Ex(iel,:),Ey(iel,:),De,d);
 
             % Assembling
             fint(Edof(iel,2:end))=fint(Edof(iel,2:end))+fe_int;
