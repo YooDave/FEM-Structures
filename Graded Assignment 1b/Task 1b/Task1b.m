@@ -13,9 +13,12 @@ grav = 0;
 P = -0; % Force in [N]
 
 % D matrix of material properties for plane strain
-% ptype=2; %ptype=1: plane stress ||| 2: plane strain ||| 3:axisym ||| 4: 3d
-% D=hooke(ptype,mpar.Emod,nu); % Constitutive matrix - plane stress
-De = (mpar.Emod / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1-2*nu)/2];
+% ptype=1: plane stress ||| 2: plane strain ||| 3:axisym ||| 4: 3d
+ptype=2; 
+De =hooke(ptype,mpar.Emod,nu); % Constitutive matrix - plane strain
+% De = (mpar.Emod / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1-2*nu)/2];
+De(3,:) = [];
+De(:,3) = [];
 
 % Length
 L = 2;
@@ -148,7 +151,7 @@ for i=1:ntime
             break
         end
 
-        f_extC = fint(dof_C)- fext(dof_C);
+        % f_extC = fint(dof_C)- fext(dof_C);
 
 
     end

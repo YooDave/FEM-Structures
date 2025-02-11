@@ -10,10 +10,10 @@ H = 1/6;
 
 for i = 1:3    
     % Calculation of strain and stress
-    Et = Be(:,:,i)*ed;
-    Es = De*Be(:,:,i) * ed;
-
-    Ke = Ke + Be(:,:,i)' * De*Be(:,:,i)*H*d*det(Fisop(:,:,i));
+    % Et = Be(:,:,i)*ed;
+    % Es = De*Be(:,:,i) * ed;
+    
+    Ke = Ke + Be(:,:,i).' * De*Be(:,:,i)*H*d*det(Fisop(:,:,i));
     % fe_int = fe_int + Be(:,:,i).'*Es * d* det(Fisop(:,:,i))*H;
 end
 

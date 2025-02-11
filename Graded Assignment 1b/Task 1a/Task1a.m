@@ -10,7 +10,7 @@ dens = 7850;
 grav = 0;
 
 % External force P acting on node 3
-P = -0; % Force in [N]
+P = -20000; % Force in [N]
 
 % D matrix of material properties for plane strain
 De = (mpar.Emod / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1-2*nu)/2];
@@ -49,7 +49,7 @@ da=a-aold;
 
 % Define free dofs and constrained dofs
 dof_F=[1:ndofs]; 
-dof_C=[1 2 7 8 6];
+dof_C=[1 2 7 8];
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
@@ -93,7 +93,7 @@ for i=1:ntime
     % Initial guess of unknown displacement field
     a(dof_F)=aold(dof_F)+da(dof_F);
 
-    a(6) = -aa(i);
+    % a(6) = -aa(i);
 	
     % Newton iteration to find unknown displacements
     unbal=1e10; niter=0;
@@ -101,7 +101,7 @@ for i=1:ntime
         K=K.*0; 
         fint=fint.*0; %nullify
         % fext = f_ext;
-		fext = fext.*0;
+		fext = f_ext;
 
         % Loop over elements
         for iel=1:nelem
