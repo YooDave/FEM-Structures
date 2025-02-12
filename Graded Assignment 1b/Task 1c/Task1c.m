@@ -129,7 +129,7 @@ for i=1:ntime
             d_ae = da(Edof(iel,2:end));
 
             % Element calculations for
-            [fe_int, Ke,fe_ext, state_new(:,:,iel), stress_new(:,:,iel)] = ThermQuadTriang(ed,d_ae,Ex(iel,:),Ey(iel,:),De,d,state_old(iel,:),stress_old(:,:,iel), mpar);
+            [fe_int, Ke,fe_ext, state_new(:,:,iel), stress_new(:,:,iel)] = ThermQuadTriang(ed,d_ae,Ex(iel,:),Ey(iel,:),De,d,state_old(:,:,iel),stress_old(:,:,iel), mpar);
 
             % Assembling
             fint(Edof(iel,2:end))=fint(Edof(iel,2:end))+fe_int;

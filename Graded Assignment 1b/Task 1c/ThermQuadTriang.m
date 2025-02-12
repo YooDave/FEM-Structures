@@ -9,6 +9,9 @@ fe_int = zeros(12,1);
 state = zeros(size(state_old));
 stress = zeros(size(stress_old));
 
+% Calculating area of element
+Ae=Area(Ex(1),Ey(1),Ex(2),Ey(2),Ex(3),Ey(3));
+
 % Determining B-matrix and Fisop-matrix for all three gauss points
 [Be,Fisop] = Be_quad_func([Ex(1) Ey(1)]',[Ex(2) Ey(2)]',...
     [Ex(3) Ey(3)]',[Ex(4) Ey(4)]',[Ex(5) Ey(5)]',...
@@ -30,7 +33,10 @@ for i = 1:3
     % Compute tangent material behaviour
     dstress_dstrain = dmises(2,[mpar.Emod mpar.nu mpar.Hmod],stress(:,i)',state(:,i)');
 
-    Ke = Ke + Be(:,:,i).' * De*Be(:,:,i)*H*d*det(Fisop(:,:,i));
+    % Ke = Ke + Be(:,:,i).' * De*Be(:,:,i)*H*d*det(Fisop(:,:,i));
+
+    fe_int = fe_int + Be(:,:,i)* stress(:,i)*d*Ae;
+    Ke = Ke + Be(:,:,i).' * dstress_dstrain * Be(:,:,i) * d* Ae;
     
 end
 
