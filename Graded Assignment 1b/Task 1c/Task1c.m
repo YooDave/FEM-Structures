@@ -3,7 +3,7 @@ g = 9.81; % Gravitational acceleration
 mpar.Emod=210e9; %Pa
 mpar.Sy=400e6; %Pa
 mpar.Hmod=40000E6;
-nu = 0.3;
+mpar.nu = 0.3;
 dens = 7850;
 mpar.Ep = (mpar.Emod*mpar.Hmod)/(mpar.Emod+mpar.Hmod);
 alpha = 10e-6; % Thermal expansion coefficient (K^-1)
@@ -19,7 +19,7 @@ P = -0; % Force in [N]
 % D matrix of material properties for plane strain
 % ptype=1: plane stress ||| 2: plane strain ||| 3:axisym ||| 4: 3d
 ptype=2; 
-De =hooke(ptype,mpar.Emod,nu); % Constitutive matrix - plane strain
+De =hooke(ptype,mpar.Emod,mpar.nu); % Constitutive matrix - plane strain
 % De = (mpar.Emod / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1-2*nu)/2];
 
 % Length
@@ -93,11 +93,15 @@ f_ext = fint;
 %tolerance value for Newton iteration
 tol=1e-6;
 
-% Initializing stress and strain matrices
-Et = zeros(nelem,3); % Strain
-Es = zeros(nelem,3); % Stress
+%initialize state variables
+no_state=3;
+state=zeros(no_state, 3, nelem);
+state_old=zeros(no_state, 3, nelem); %old state variables
+state_old(2,:,:) = sigma_yield;
 
-stress = zeros(nelem,ntime);
+% Initializing stress and strain matrices
+stress_old = zeros(4, 3, nelem);
+stress_new = stress_old;
 
 
 %---------------------------------------------------
@@ -122,10 +126,10 @@ for i=1:ntime
 
             % Extract element diplacements
             ed=a(Edof(iel,2:end));
+            d_ae = da(Edof(iel,2:end));
 
-            % Element calculations for CST
-            % [fe_int, Ke,fe_ext, state_new, stress_temp] = ThermQuadTriang(ed,Ex(iel,:),Ey(iel,:),De,d,state_old(iel,:), mpar);
-            [fe_int, Ke, fe_ext] = QuadTriang_TEP(ed, Ex, Ey, De, d, alpha, DeltaT, sigma_old, ep_old, sigma_yield, mpar);
+            % Element calculations for
+            [fe_int, Ke,fe_ext, state_new(:,:,iel), stress_new(:,:,iel)] = ThermQuadTriang(ed,d_ae,Ex(iel,:),Ey(iel,:),De,d,state_old(iel,:),stress_old(:,:,iel), mpar);
 
             % Assembling
             fint(Edof(iel,2:end))=fint(Edof(iel,2:end))+fe_int;
