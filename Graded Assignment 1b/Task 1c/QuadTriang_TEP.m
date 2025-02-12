@@ -1,4 +1,4 @@
-function [fe_int, Ke, fe_ext] = QuadTriang_TEP(ed, Ex, Ey, De, d, alpha, DeltaT, sigma_old, ep_old, sigma_yield, H)
+function [fe_int, Ke, fe_ext] = QuadTriang_TEP(ed, Ex, Ey, De, d, alpha, DeltaT, sigma_old, ep_old, sigma_yield, mpar)
 
 Ke = zeros(12);
 fe_int = zeros(12,1);
@@ -13,13 +13,13 @@ for i = 1:3
     DeltaEps = Be(:,:,i) * ed;
 
     % Compute thermal strain increment
-    DeltaEps_th = alpha * DeltaT * [1; 1; 1; 0];
+    DeltaEps_th = alpha * DeltaT * [1; 1; 1];
 
     % Compute trial stress
     Sigma_trial = sigma_old(:,i) + De * (DeltaEps - DeltaEps_th);
 
     % Use CALFEM function to check if yielding occurs
-    [Sigma_new, ep_new, D_tangent] = mises(Sigma_trial, ep_old(i), sigma_yield, H);
+    [Sigma_new, ep_new, D_tangent] = mises(Sigma_trial, ep_old(i), sigma_yield, mpar.Hmod);
 
     % Update element stiffness matrix using tangent stiffness
     Ke = Ke + Be(:,:,i)' * D_tangent * Be(:,:,i) * H * d * det(Fisop(:,:,i));

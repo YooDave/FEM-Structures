@@ -2,9 +2,13 @@
 g = 9.81; % Gravitational acceleration
 mpar.Emod=210e9; %Pa
 mpar.Sy=400e6; %Pa
-mpar.Hmod=mpar.Emod/20;
+mpar.Hmod=40000E6;
 nu = 0.3;
 dens = 7850;
+mpar.Ep = (mpar.Emod*mpar.Hmod)/(mpar.Emod+mpar.Hmod);
+alpha = 10e-6; % Thermal expansion coefficient (K^-1)
+sigma_yield = 500e6; % Yield stress (Pa)
+
 
 % Gravitation (1=yes; 0=no)
 grav = 0;
@@ -17,8 +21,6 @@ P = -0; % Force in [N]
 ptype=2; 
 De =hooke(ptype,mpar.Emod,nu); % Constitutive matrix - plane strain
 % De = (mpar.Emod / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1-2*nu)/2];
-De(3,:) = [];
-De(:,3) = [];
 
 % Length
 L = 2;
@@ -95,6 +97,8 @@ tol=1e-6;
 Et = zeros(nelem,3); % Strain
 Es = zeros(nelem,3); % Stress
 
+stress = zeros(nelem,ntime);
+
 
 %---------------------------------------------------
 % Newton iteration for solving Non-Linear problem
@@ -103,7 +107,7 @@ Es = zeros(nelem,3); % Stress
 for i=1:ntime
     % Initial guess of unknown displacement field
     a(dof_F)=aold(dof_F)+da(dof_F);
-	
+
     a(6) = -aa(i);
 
     % Newton iteration to find unknown displacements
@@ -112,40 +116,41 @@ for i=1:ntime
         K=K.*0; 
         fint=fint.*0; %nullify
         fext = f_ext;
-		
+
         % Loop over elements
         for iel=1:nelem
-		
+
             % Extract element diplacements
             ed=a(Edof(iel,2:end));
-			
+
             % Element calculations for CST
-            [fe_int,Ke,fe_ext] = ThermQuadTriang(ed,Ex(iel,:),Ey(iel,:),De,d);
+            % [fe_int, Ke,fe_ext, state_new, stress_temp] = ThermQuadTriang(ed,Ex(iel,:),Ey(iel,:),De,d,state_old(iel,:), mpar);
+            [fe_int, Ke, fe_ext] = QuadTriang_TEP(ed, Ex, Ey, De, d, alpha, DeltaT, sigma_old, ep_old, sigma_yield, mpar);
 
             % Assembling
             fint(Edof(iel,2:end))=fint(Edof(iel,2:end))+fe_int;
             fext(Edof(iel,2:end))=fext(Edof(iel,2:end))+fe_ext;
-			
+
             K(Edof(iel,2:end),Edof(iel,2:end))=...
                 K(Edof(iel,2:end),Edof(iel,2:end))+Ke;
 
             % Calculation of strain and stress
             % Et(iel,:) = Be*a(Edof(iel,2:end)); % Strain
             % Es(iel,:) = De*Be*a(Edof(iel,2:end)); % Stress
-				
+
         end
         % Unbalance equation
         g_F=fint(dof_F)-fext(dof_F);
-		
+
         unbal=norm(g_F);
         if unbal > tol
             % Newton update
             a(dof_F)=a(dof_F)-K(dof_F,dof_F)\g_F;
         end 
-		
+
         niter=niter+1; %update iter counter
         [niter unbal]  %print on screen
-		
+
         if niter>400
             disp('no convergence in Newton iteration')
             break
@@ -155,7 +160,7 @@ for i=1:ntime
 
 
     end
-    
+
     F(i) = -fint(6);
 
     da=a-aold;

@@ -1,4 +1,4 @@
-function [fe_int,Ke,fe_ext] = ThermQuadTriang(ed,Ex,Ey,De,d)
+function [fe_int,Ke,fe_ext,state,stress] = ThermQuadTriang(ed,Ex,Ey,De,d,state_old,stress_old, mpar)
 
 Ke = zeros(12);
 fe_int = zeros(12,1);
