@@ -10,7 +10,7 @@ state = zeros(size(state_old));
 stress = zeros(size(stress_old));
 
 % Calculating area of element
-Ae=Area(Ex(1),Ey(1),Ex(2),Ey(2),Ex(3),Ey(3));
+% Ae=Area(Ex(1),Ey(1),Ex(2),Ey(2),Ex(3),Ey(3));
 
 % Determining B-matrix and Fisop-matrix for all three gauss points
 [Be,Fisop] = Be_quad_func([Ex(1) Ey(1)]',[Ex(2) Ey(2)]',...
@@ -35,17 +35,11 @@ for i = 1:3
 
     % Ke = Ke + Be(:,:,i).' * De*Be(:,:,i)*H*d*det(Fisop(:,:,i));
 
-    fe_int = fe_int + Be(:,:,i)* stress(:,i)*d*Ae;
-    Ke = Ke + Be(:,:,i).' * dstress_dstrain * Be(:,:,i) * d* Ae;
+    fe_int = fe_int + [Be(:,:,i);sizeBe].'* stress(:,i)*d*H*det(Fisop(:,:,i));
+    Ke = Ke + [Be(:,:,i);sizeBe].' * dstress_dstrain * H * [Be(:,:,i);sizeBe] * d* det(Fisop(:,:,i));
     
 end
 
 fe_ext = zeros(12,1);
-
-% Calculate D-matrix using CALFEM
-% mpar.Emod = 200.e3; % Youngs modulus [MPa]
-% mpar.v = 0.3; % Poisson's ratio [-]
-% ptype=1; %ptype=1: plane stress 2: plane strain, 3:axisym, 4: 3d
-% D=hooke(ptype,mpar.Emod,mpar.v); % Constitutive matrix - plane stress
 
 end

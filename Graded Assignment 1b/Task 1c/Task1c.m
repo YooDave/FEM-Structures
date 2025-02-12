@@ -14,7 +14,7 @@ sigma_yield = 500e6; % Yield stress (Pa)
 grav = 0;
 
 % External force P acting on node 3
-P = -0; % Force in [N]
+P = -20000; % Force in [N]
 
 % D matrix of material properties for plane strain
 % ptype=1: plane stress ||| 2: plane strain ||| 3:axisym ||| 4: 3d
@@ -61,7 +61,7 @@ da=a-aold;
 
 % Define free dofs and constrained dofs
 dof_F=[1:ndofs]; 
-dof_C=[1 2 6 13 14 17 18];
+dof_C=[1 2 13 14 17 18];
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
@@ -90,6 +90,10 @@ F=zeros(size(aa));
 f_ext = fint;
 % f_ext(6) = P;
 
+% Force control
+% Displacement control
+PP = linspace(0,abs(P),ntime);
+
 %tolerance value for Newton iteration
 tol=1e-6;
 
@@ -101,7 +105,7 @@ state_old(2,:,:) = sigma_yield;
 
 % Initializing stress and strain matrices
 stress_old = zeros(4, 3, nelem);
-stress_new = stress_old;
+stress = stress_old;
 
 
 %---------------------------------------------------
@@ -111,8 +115,8 @@ stress_new = stress_old;
 for i=1:ntime
     % Initial guess of unknown displacement field
     a(dof_F)=aold(dof_F)+da(dof_F);
-
-    a(6) = -aa(i);
+    
+    % a(6) = -aa(i);
 
     % Newton iteration to find unknown displacements
     unbal=1e10; niter=0;
@@ -120,6 +124,7 @@ for i=1:ntime
         K=K.*0; 
         fint=fint.*0; %nullify
         fext = f_ext;
+        fext(6) = PP(i);
 
         % Loop over elements
         for iel=1:nelem
@@ -129,7 +134,7 @@ for i=1:ntime
             d_ae = da(Edof(iel,2:end));
 
             % Element calculations for
-            [fe_int, Ke,fe_ext, state_new(:,:,iel), stress_new(:,:,iel)] = ThermQuadTriang(ed,d_ae,Ex(iel,:),Ey(iel,:),De,d,state_old(:,:,iel),stress_old(:,:,iel), mpar);
+            [fe_int, Ke,fe_ext, state_new, stress_new] = ThermQuadTriang(ed,d_ae,Ex(iel,:),Ey(iel,:),De,d,state_old(:,:,iel),stress_old(:,:,iel), mpar);
 
             % Assembling
             fint(Edof(iel,2:end))=fint(Edof(iel,2:end))+fe_int;
@@ -137,10 +142,11 @@ for i=1:ntime
 
             K(Edof(iel,2:end),Edof(iel,2:end))=...
                 K(Edof(iel,2:end),Edof(iel,2:end))+Ke;
+            
 
-            % Calculation of strain and stress
-            % Et(iel,:) = Be*a(Edof(iel,2:end)); % Strain
-            % Es(iel,:) = De*Be*a(Edof(iel,2:end)); % Stress
+            % temporarily updating state
+            state(:,:,iel) = state_new;
+            stress(:,:,iel) = stress_new;
 
         end
         % Unbalance equation
@@ -166,27 +172,29 @@ for i=1:ntime
     end
 
     F(i) = -fint(6);
-
+    
+    stress_old = stress;
+    state_old = state;
     da=a-aold;
     aold = a;
     a_total(:,i) = a;    
-    plot(aa,F,'-') %for plotting during simulation
-    drawnow
+    % plot(aa,F,'-') %for plotting during simulation
+    % drawnow
 end
 
-close all
-plot(aa,F,'linewidth',2)
-set(gca,'FontSize',14,'fontname','Times New Roman')
-xlabel('$a$ [m]','FontSize',16,'interpreter','latex')
-ylabel('$F$ [N]','FontSize',16,'interpreter','latex')
-grid on
-
-P = F(end);
+% close all
+% plot(aa,F,'linewidth',2)
+% set(gca,'FontSize',14,'fontname','Times New Roman')
+% xlabel('$a$ [m]','FontSize',16,'interpreter','latex')
+% ylabel('$F$ [N]','FontSize',16,'interpreter','latex')
+% grid on
+% 
+% P = F(end);
 
 
 % Analytical solution of cantilever beam
 % https://www.engineeringtoolbox.com/cantilever-beams-d_1848.html
-I = 1/12 * d*h^3;
-defl = abs(P)*L^3 /(3*mpar.Emod*I);
+% I = 1/12 * d*h^3;
+% defl = abs(P)*L^3 /(3*mpar.Emod*I);
 
 
