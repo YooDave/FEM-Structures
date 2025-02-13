@@ -54,9 +54,11 @@ dof_C= leftNodes;
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
+% ----------------------------------------------------
 ntime=100; %number of timesteps
 tend=ntime; %end of time [s]
 t=linspace(0,tend,ntime);
+% ----------------------------------------------------
 
 % Test run
 a_total = zeros(ndofs,ntime);
@@ -204,3 +206,5 @@ end
 sigma = mpar.Emod * alpha_s * (Tmax-Tmin);
 F_anal = sigma * h*d;
 F_FE = fint(5) + fint(9) + fint(3);
+
+% Check stress_avg, min(a), fint, generally all results
