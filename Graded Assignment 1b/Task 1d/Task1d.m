@@ -217,3 +217,20 @@ niter_total(1) = [];
 plot(t,niter_total)
 xlabel('Time step')
 ylabel('Number of iterations')
+
+figure
+plot(t,T)
+xlabel('Time step','FontSize',16,'interpreter','latex')
+ylabel('$\Delta T$ [K]','FontSize',16,'interpreter','latex')
+
+maxDisp = zeros(1,ntime);
+for i = 1:ntime
+    maxDisp(i) = max(abs(a_total(:,i)));
+end
+
+figure
+plot(T,maxDisp,'linewidth',2)
+set(gca,'FontSize',14,'fontname','Times New Roman')
+xlabel('$\Delta T$ [K]','FontSize',16,'interpreter','latex')
+ylabel('$a$ [m]','FontSize',16,'interpreter','latex')
+grid on
