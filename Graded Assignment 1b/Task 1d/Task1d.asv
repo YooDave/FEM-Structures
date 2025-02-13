@@ -50,6 +50,11 @@ da=a-aold;
 
 % Define free dofs and constrained dofs
 dof_F=[1:ndofs]; 
+
+dof_C = zeros(1,2*size(leftNodes,2));
+for i = size(leftNodes,2)
+    dof_C(2*i-1) = 
+
 dof_C= leftNodes;
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 

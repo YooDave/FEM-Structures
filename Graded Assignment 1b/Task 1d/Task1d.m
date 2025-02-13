@@ -50,7 +50,11 @@ da=a-aold;
 
 % Define free dofs and constrained dofs
 dof_F=[1:ndofs]; 
-dof_C= leftNodes;
+dof_C = zeros(1,2*size(leftNodes,2));
+for i =1: size(leftNodes,2)
+    dof_C(2*i-1) = 2*leftNodes(i)-1;
+    dof_C(2*i) = 2*leftNodes(i);
+end
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
@@ -197,7 +201,7 @@ plot(T(1:end/2),F(1:end/2),'linewidth',2)
 hold on;
 plot(T(end/2:end),F(end/2:end),'linewidth',2)
 set(gca,'FontSize',14,'fontname','Times New Roman')
-xlabel('$T$ [K]','FontSize',16,'interpreter','latex')
+xlabel('$\Delta T$ [K]','FontSize',16,'interpreter','latex')
 ylabel('$a$ [m]','FontSize',16,'interpreter','latex')
 grid on
 
@@ -208,6 +212,7 @@ for i = 1:nelem
     stress_avg(i,1) = (stress_total(1,1,i)+stress_total(2,1,i)+stress_total(3,1,i))/3;
 end
 
+figure
 niter_total(1) = [];
 plot(t,niter_total)
 xlabel('Time step')
