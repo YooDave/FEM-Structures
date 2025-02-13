@@ -103,6 +103,7 @@ state_old(2,:,:) = mpar.Sy;
 stress_old = zeros(4, 3, nelem);
 stress = stress_old;
 
+niter_total = 0;
 
 %---------------------------------------------------
 % Newton iteration for solving Non-Linear problem
@@ -172,6 +173,7 @@ for i=1:ntime
 
     end
 
+    niter_total = cat(1,niter_total,niter);
     F(i) = -fint(5);
     
     stress_old = stress;

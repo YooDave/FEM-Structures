@@ -55,7 +55,7 @@ dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
 % ----------------------------------------------------
-ntime=100; %number of timesteps
+ntime=150; %number of timesteps
 tend=ntime; %end of time [s]
 t=linspace(0,tend,ntime);
 % ----------------------------------------------------
@@ -80,9 +80,14 @@ f_ext(6) = P;
 % Temperature control
 Tmin = 0;
 Tmax = 300;
-T1 = linspace(Tmin,Tmax,ntime/2);
-T2 = linspace(Tmax,Tmin,ntime/2);
-T = cat(2,T1,T2);
+RiseFall = 0;
+if RiseFall == 1
+    T1 = linspace(Tmin,Tmax,ntime/2);
+    T2 = linspace(Tmax,Tmin,ntime/2);
+    T = cat(2,T1,T2);
+else
+    T = linspace(Tmin,Tmax,ntime);
+end
 dT = 0;
 
 %tolerance value for Newton iteration
@@ -94,10 +99,19 @@ state=zeros(no_state, 3, nelem);
 state_old=zeros(no_state, 3, nelem); %old state variables
 state_old(2,:,:) = mpar.Sy;
 
+for i = 1:nelem
+    if max(Ey(i,:))>0.01
+        state_old(2,:,i) = mpar.Sy;
+    else
+        state_old(2,:,i) = mpar2.Sy;
+    end
+end
+
 % Initializing stress and strain matrices
 stress_old = zeros(4, 3, nelem);
 stress = stress_old;
 
+niter_total = 0;
 
 %---------------------------------------------------
 % Newton iteration for solving Non-Linear problem
@@ -126,12 +140,6 @@ for i=1:ntime
             % Extract element diplacements
             ed=a(Edof(iel,2:end));
             d_ae = a(Edof(iel,2:end)) - aold(Edof(iel,2:end));
-            
-            if max(Ey)>0.01
-                state_old(2,:,iel) = mpar.Sy;
-            else
-                state_old(2,:,iel) = mpar2.Sy;
-            end
 
             % Element calculations for
             [fe_int, Ke,fe_ext, state_new, stress_new] = BiThermQuadTriang(ed,...
@@ -173,6 +181,7 @@ for i=1:ntime
 
     end
 
+    niter_total = cat(1,niter_total,niter);
     F(i) = -fint(5);
     
     stress_old = stress;
@@ -185,7 +194,9 @@ for i=1:ntime
 end
 
 close all
-plot(T,F,'linewidth',2)
+plot(T(1:end/2),F(1:end/2),'linewidth',2)
+% hold on;
+% plot(T(end/2:end),F(end/2:end),'linewidth',2,'r')
 set(gca,'FontSize',14,'fontname','Times New Roman')
 xlabel('$T$ [K]','FontSize',16,'interpreter','latex')
 ylabel('$F$ [N]','FontSize',16,'interpreter','latex')

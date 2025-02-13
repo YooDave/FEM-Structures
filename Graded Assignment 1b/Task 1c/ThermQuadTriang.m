@@ -21,8 +21,9 @@ sizeBe = zeros(1,size(Be(:,:,1),2));
 
 for i = 1:3    
     
-    strain = [Be(:,:,i);sizeBe] * ed;
-    dstrain = [Be(:,:,i);sizeBe] * da;
+    Be_temp = [Be(1:2,:,i);sizeBe;Be(3,:,i)];
+    strain = Be_temp * ed;
+    dstrain = Be_temp * da;
     
     % Compute trial stress (and add zero zz-strain component using D as 4x4 matrix
     % stress_trial = stress_old(:,i) + De*[dstrain(1:3);0];
@@ -37,8 +38,8 @@ for i = 1:3
 
     % Ke = Ke + Be(:,:,i).' * De*Be(:,:,i)*H*d*det(Fisop(:,:,i));
 
-    fe_int = fe_int + [Be(:,:,i);sizeBe].'* stress(:,i)*d*H*det(Fisop(:,:,i));
-    Ke = Ke + [Be(:,:,i);sizeBe].' * dstress_dstrain * H * [Be(:,:,i);sizeBe] * d* det(Fisop(:,:,i));
+    fe_int = fe_int + Be_temp.'* stress(:,i)*d*H*det(Fisop(:,:,i));
+    Ke = Ke + Be_temp.' * dstress_dstrain * H * Be_temp * d* det(Fisop(:,:,i));
     
 end
 
