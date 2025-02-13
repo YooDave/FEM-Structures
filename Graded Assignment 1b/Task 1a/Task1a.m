@@ -41,6 +41,19 @@ dof = [1 2; 3 4; 5 6; 7 8];
 % Compute Ex and Ey from CALFEM routine
 [Ex,Ey]=coordxtr(Edof,Coord,dof,3);
 
+% eldraw2(Ex,Ey);
+% xlabel('x-coordinate [m]');
+% ylabel('y-coordinate [m]')
+
+scatter(Ex,Ey,"k");
+hold on;
+xlabel('x-coordinate [m]');
+ylabel('y-coordinate [m]')
+% plot([0,2,0,2,0,0,0,0,2,2],[0,2,2,2,0,2,2,2,0,2],"k")
+plot([0,2,0,0,2,2],[0,2,2,0,0,2],"k")
+xlim([-0.5, 2.5]);
+ylim([-0.5 2.5]);
+
 % Initialize displacements
 a=zeros(ndofs,1);
 aold=zeros(ndofs,1);  %old displacements (from previous timestep)
@@ -49,7 +62,7 @@ da=a-aold;
 
 % Define free dofs and constrained dofs
 dof_F=[1:ndofs]; 
-dof_C=[1 2 7 8];
+dof_C=[1 2 6 7 8];
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
@@ -84,6 +97,7 @@ tol=1e-6;
 Et = zeros(nelem,3); % Strain
 Es = zeros(nelem,3); % Stress
 
+niter_total = 0;
 
 %---------------------------------------------------
 % Newton iteration for solving Non-Linear problem
@@ -93,7 +107,7 @@ for i=1:ntime
     % Initial guess of unknown displacement field
     a(dof_F)=aold(dof_F)+da(dof_F);
 
-    % a(6) = -aa(i);
+    a(6) = -aa(i);
 	
     % Newton iteration to find unknown displacements
     unbal=1e10; niter=0;
@@ -146,6 +160,7 @@ for i=1:ntime
 
     end
     
+    niter_total = cat(1,niter_total,niter);
     F(i)=-fint(6);
 
     da=a-aold;
@@ -163,6 +178,11 @@ xlabel('$a$ [m]','FontSize',16,'interpreter','latex')
 ylabel('$F$ [N]','FontSize',16,'interpreter','latex')
 grid on
 
+niter_total(1) = [];
+plot(t,niter_total)
+xlabel('Time step')
+ylabel('Number of iterations')
+
 P = F(end);
 
 % Analytical solution of cantilever beam
@@ -170,4 +190,4 @@ P = F(end);
 I = 1/12 * d*h^3;
 defl = abs(P)*L^3 /(3*mpar.Emod*I);
 
-
+P = (amax * 3*mpar.Emod*I)/L^3;

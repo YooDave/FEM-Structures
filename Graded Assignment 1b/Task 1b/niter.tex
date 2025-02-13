@@ -1,0 +1,55 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.566in,
+at={(0.758in,0.481in)},
+scale only axis,
+xmin=0,
+xmax=100,
+xlabel style={font=\color{white!15!black}},
+xlabel={Time step},
+ymin=1,
+ymax=2,
+ylabel style={font=\color{white!15!black}},
+ylabel={Number of iterations},
+axis background/.style={fill=white}
+]
+\addplot [color=mycolor1, forget plot]
+  table[row sep=crcr]{%
+0	1\\
+1.01010101010101	2\\
+2.02020202020202	1\\
+56.5656565656566	1\\
+57.5757575757576	2\\
+58.5858585858586	1\\
+59.5959595959596	2\\
+60.6060606060606	1\\
+61.6161616161616	2\\
+62.6262626262626	1\\
+63.6363636363636	2\\
+64.6464646464647	1\\
+65.6565656565657	2\\
+66.6666666666667	1\\
+67.6767676767677	2\\
+68.6868686868687	2\\
+69.6969696969697	1\\
+79.7979797979798	1\\
+80.8080808080808	2\\
+81.8181818181818	2\\
+82.8282828282828	1\\
+96.969696969697	1\\
+97.979797979798	2\\
+98.989898989899	1\\
+100	2\\
+};
+\end{axis}
+\end{tikzpicture}%

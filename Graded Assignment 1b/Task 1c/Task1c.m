@@ -1,20 +1,18 @@
 %% Material model parameters
 g = 9.81; % Gravitational acceleration
-mpar.Emod=210e9; %Pa
-mpar.Sy=400e6; %Pa
-mpar.Hmod=40000E6;
+mpar.Emod=210e9; % Young's modulus [Pa]
+mpar.Sy=500e6; % Sigma yield [Pa]
+mpar.Hmod=40000E6; % H-modulus [Pa]
 mpar.nu = 0.3;
 dens = 7850;
-mpar.Ep = (mpar.Emod*mpar.Hmod)/(mpar.Emod+mpar.Hmod);
 alpha = 10e-6; % Thermal expansion coefficient (K^-1)
-sigma_yield = 500e6; % Yield stress (Pa)
 
 
 % Gravitation (1=yes; 0=no)
 grav = 0;
 
 % External force P acting on node 3
-P = -20000; % Force in [N]
+P = 0; % Force in [N]
 
 % D matrix of material properties for plane strain
 % ptype=1: plane stress ||| 2: plane strain ||| 3:axisym ||| 4: 3d
@@ -61,7 +59,7 @@ da=a-aold;
 
 % Define free dofs and constrained dofs
 dof_F=[1:ndofs]; 
-dof_C=[1 2 13 14 17 18];
+dof_C=[1 2 3 4 5 6 9 10 13 14 17 18];
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
@@ -72,10 +70,6 @@ t=linspace(0,tend,ntime);
 % Test run
 a_total = zeros(ndofs,ntime);
 
-% Displacement control
-amax = 1E-3;
-aa = linspace(0,amax,ntime);
-
 % Initialize variables for post processing
 K = spalloc(ndofs,ndofs,20*ndofs); % defines K as a sparse matrix and sets the size
                                    % to (ndof x ndof) with initial zero value
@@ -84,15 +78,17 @@ K = spalloc(ndofs,ndofs,20*ndofs); % defines K as a sparse matrix and sets the s
 % Initialize internal and external force
 fint = zeros(ndofs,1);
 fext = fint;
-F=zeros(size(aa));
+F=zeros(ntime);
 
 % Vector of applied external forces
 f_ext = fint;
-% f_ext(6) = P;
+f_ext(6) = P;
 
-% Force control
-% Displacement control
-PP = linspace(0,abs(P),ntime);
+% Temperature control
+Tmin = 30;
+Tmax = 60;
+T = linspace(Tmin,Tmax,ntime);
+dT = 0;
 
 %tolerance value for Newton iteration
 tol=1e-6;
@@ -101,7 +97,7 @@ tol=1e-6;
 no_state=3;
 state=zeros(no_state, 3, nelem);
 state_old=zeros(no_state, 3, nelem); %old state variables
-state_old(2,:,:) = sigma_yield;
+state_old(2,:,:) = mpar.Sy;
 
 % Initializing stress and strain matrices
 stress_old = zeros(4, 3, nelem);
@@ -116,7 +112,10 @@ for i=1:ntime
     % Initial guess of unknown displacement field
     a(dof_F)=aold(dof_F)+da(dof_F);
     
-    % a(6) = -aa(i);
+    if i>1
+        dT = T(i)-T(i-1);
+    end
+
 
     % Newton iteration to find unknown displacements
     unbal=1e10; niter=0;
@@ -124,17 +123,19 @@ for i=1:ntime
         K=K.*0; 
         fint=fint.*0; %nullify
         fext = f_ext;
-        fext(6) = PP(i);
+        % fext(6) = PP(i);
 
         % Loop over elements
         for iel=1:nelem
 
             % Extract element diplacements
             ed=a(Edof(iel,2:end));
-            d_ae = da(Edof(iel,2:end));
+            d_ae = a(Edof(iel,2:end)) - aold(Edof(iel,2:end));
 
             % Element calculations for
-            [fe_int, Ke,fe_ext, state_new, stress_new] = ThermQuadTriang(ed,d_ae,Ex(iel,:),Ey(iel,:),De,d,state_old(:,:,iel),stress_old(:,:,iel), mpar);
+            [fe_int, Ke,fe_ext, state_new, stress_new] = ThermQuadTriang(ed,...
+                d_ae,Ex(iel,:),Ey(iel,:),De,d,state_old(:,:,iel),...
+                stress_old(:,:,iel), mpar, T(i),dT,alpha);
 
             % Assembling
             fint(Edof(iel,2:end))=fint(Edof(iel,2:end))+fe_int;
@@ -171,30 +172,34 @@ for i=1:ntime
 
     end
 
-    F(i) = -fint(6);
+    F(i) = -fint(5);
     
     stress_old = stress;
     state_old = state;
     da=a-aold;
     aold = a;
     a_total(:,i) = a;    
-    % plot(aa,F,'-') %for plotting during simulation
+    % plot(T,F,'-') %for plotting during simulation
     % drawnow
 end
 
-% close all
-% plot(aa,F,'linewidth',2)
-% set(gca,'FontSize',14,'fontname','Times New Roman')
-% xlabel('$a$ [m]','FontSize',16,'interpreter','latex')
-% ylabel('$F$ [N]','FontSize',16,'interpreter','latex')
-% grid on
+close all
+plot(T,F,'linewidth',2)
+set(gca,'FontSize',14,'fontname','Times New Roman')
+xlabel('$T$ [K]','FontSize',16,'interpreter','latex')
+ylabel('$F$ [N]','FontSize',16,'interpreter','latex')
+grid on
 % 
 % P = F(end);
 
+stress_total = zeros(4,1,nelem);
+
+for i = 1:nelem
+    stress_total(:,:,i) = stress(:,1,i) + stress(:,2,i) + stress(:,3,i);
+end
 
 % Analytical solution of cantilever beam
 % https://www.engineeringtoolbox.com/cantilever-beams-d_1848.html
-% I = 1/12 * d*h^3;
-% defl = abs(P)*L^3 /(3*mpar.Emod*I);
-
-
+sigma = mpar.Emod * alpha * (Tmax-Tmin);
+F_anal = sigma * h*d;
+F_FE = fint(5) + fint(9) + fint(3);

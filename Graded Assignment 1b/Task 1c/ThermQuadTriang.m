@@ -1,4 +1,5 @@
-function [fe_int,Ke,fe_ext,state,stress] = ThermQuadTriang(ed,da,Ex,Ey,De,d,state_old,stress_old, mpar)
+function [fe_int,Ke,fe_ext,state,stress] = ThermQuadTriang(ed,da,Ex,Ey,De,...
+    d,state_old,stress_old, mpar, T, dT,alpha)
 
 % Gauss weights for quadratic triangles
 H = 1/6; 
@@ -24,7 +25,8 @@ for i = 1:3
     dstrain = [Be(:,:,i);sizeBe] * da;
     
     % Compute trial stress (and add zero zz-strain component using D as 4x4 matrix
-    stress_trial = stress_old(:,i) + De*[dstrain(1:2);0;dstrain(3)];
+    % stress_trial = stress_old(:,i) + De*[dstrain(1:3);0];
+    stress_trial = stress_old(:,i) + De*(dstrain -alpha*dT*[1;1;1;0]);
 
     % Compute updated stress and updated state variables from trial stress
     [stress(:,i),deps,state(:,i)]=mises(2,[mpar.Emod;mpar.nu;mpar.Hmod],stress_trial',...
