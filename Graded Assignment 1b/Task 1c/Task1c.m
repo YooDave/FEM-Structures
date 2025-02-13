@@ -59,7 +59,7 @@ da=a-aold;
 
 % Define free dofs and constrained dofs
 dof_F=[1:ndofs]; 
-dof_C=[1 2 3 4 5 6 9 10 13 14 17 18];
+dof_C=[1 2 3 4 5 6 7 8 9 10 13 14 15 16 17 18];
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
@@ -86,7 +86,7 @@ f_ext(6) = P;
 
 % Temperature control
 Tmin = 0;
-Tmax = 60;
+Tmax = 10;
 T = linspace(Tmin,Tmax,ntime);
 dT = 0;
 
@@ -188,7 +188,7 @@ end
 close all
 plot(T,F,'linewidth',2)
 set(gca,'FontSize',14,'fontname','Times New Roman')
-xlabel('$T$ [K]','FontSize',16,'interpreter','latex')
+xlabel('$\Delta T$ [K]','FontSize',16,'interpreter','latex')
 ylabel('$F$ [N]','FontSize',16,'interpreter','latex')
 grid on
 % 
@@ -197,13 +197,13 @@ grid on
 stress_total = zeros(4,1,nelem);
 stress_avg = zeros(nelem,1);
 for i = 1:nelem
-    stress_total(:,:,i) = stress(:,1,i) + stress(:,2,i) + stress(:,3,i);
+    stress_total(:,:,i) = (stress(:,1,i) + stress(:,2,i) + stress(:,3,i))/3;
     stress_avg(i,1) = (stress_total(1,1,i)+stress_total(2,1,i)+stress_total(3,1,i))/3;
 end
 
 
 % Analytical solution of cantilever beam
 % https://www.engineeringtoolbox.com/cantilever-beams-d_1848.html
-sigma = mpar.Emod * alpha * (Tmax-Tmin);
+sigma = De * alpha * (Tmax-Tmin)*[1;1;1;0];
 F_anal = sigma * h*d;
 F_FE = fint(5) + fint(9) + fint(3);
