@@ -55,7 +55,7 @@ dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
 % ----------------------------------------------------
-ntime=150; %number of timesteps
+ntime=100; %number of timesteps
 tend=ntime; %end of time [s]
 t=linspace(0,tend,ntime);
 % ----------------------------------------------------
@@ -211,6 +211,7 @@ for i = 1:nelem
     stress_avg(i,1) = (stress_total(1,1,i)+stress_total(2,1,i)+stress_total(3,1,i))/3;
 end
 
+niter_total(1) = [];
 
 % Analytical solution of cantilever beam
 % https://www.engineeringtoolbox.com/cantilever-beams-d_1848.html
