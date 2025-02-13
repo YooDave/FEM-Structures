@@ -1,15 +1,19 @@
 %% Material model parameters
-g = 9.81; % Gravitational acceleration
 mpar.Emod=210e9; % Young's modulus [Pa]
 mpar.Sy=500e6; % Sigma yield [Pa]
 mpar.Hmod=40000E6; % H-modulus [Pa]
 mpar.nu = 0.3;
-dens = 7850;
-alpha = 10e-6; % Thermal expansion coefficient (K^-1)
+alpha_s = 10e-6; % Thermal expansion coefficient (K^-1)
 
+mpar2.Emod = 80e9;
+mpar2.Sy = 200e6;
+mpar2.nu = 0.2;
+mpar2.Hmod = 1000e6;
+alpha_a = 20e-6;
 
-% Gravitation (1=yes; 0=no)
-grav = 0;
+load("bimetal_coarse.mat");
+
+Coord = 1E-3*Coord;
 
 % External force P acting on node 3
 P = 0; % Force in [N]
@@ -17,36 +21,23 @@ P = 0; % Force in [N]
 % D matrix of material properties for plane strain
 % ptype=1: plane stress ||| 2: plane strain ||| 3:axisym ||| 4: 3d
 ptype=2; 
-De =hooke(ptype,mpar.Emod,mpar.nu); % Constitutive matrix - plane strain
-% De = (mpar.Emod / ((1 + nu) * (1 - 2*nu))) * [1-nu, nu, 0; nu, 1-nu, 0; 0, 0, (1-2*nu)/2];
+Ds =hooke(ptype,mpar.Emod,mpar.nu); % Constitutive matrix - plane strain
+Da =hooke(ptype,mpar2.Emod,mpar2.nu); % Constitutive matrix - plane strain
 
 % Length
-L = 2;
+L = 0.15;
 
 % Height
-h = 2;
+h = 0.01;
 
 % Depth
-d = 1;
-
-% Element connectivity Edof
-Edof = [1 1 2 5 6 13 14 11 12 15 16 17 18;...
-    2 1 2 3 4 5 6 7 8 9 10 11 12];
+d = 0.04;
 
 % No. of elements
-nelem = size(Edof,1);
-
-% Position of nodes
-Coord = [0 0; L 0; L h; L/2 0; L h/2; L/2 h/2; 0 h; L/2 h; 0 h/2];
-nnodes = size(Coord,1);
-ndofs = 2*nnodes;
+nelem = nel;
 
 % DoFs in each node
-dof = zeros(nnodes,2);
-for i = 1:nnodes
-    dof(i,1) = 2*i -1;
-    dof(i,2) = 2*i;
-end
+dof = Dof;
 
 % Compute Ex and Ey from CALFEM routine
 [Ex,Ey]=coordxtr(Edof,Coord,dof,6);
@@ -59,7 +50,7 @@ da=a-aold;
 
 % Define free dofs and constrained dofs
 dof_F=[1:ndofs]; 
-dof_C=[1 2 3 4 5 6 9 10 13 14 17 18];
+dof_C= leftNodes;
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
@@ -86,8 +77,10 @@ f_ext(6) = P;
 
 % Temperature control
 Tmin = 0;
-Tmax = 60;
-T = linspace(Tmin,Tmax,ntime);
+Tmax = 300;
+T1 = linspace(Tmin,Tmax,ntime/2);
+T2 = linspace(Tmax,Tmin,ntime/2);
+T = cat(2,T1,T2);
 dT = 0;
 
 %tolerance value for Newton iteration
@@ -131,11 +124,17 @@ for i=1:ntime
             % Extract element diplacements
             ed=a(Edof(iel,2:end));
             d_ae = a(Edof(iel,2:end)) - aold(Edof(iel,2:end));
+            
+            if max(Ey)>0.01
+                state_old(2,:,iel) = mpar.Sy;
+            else
+                state_old(2,:,iel) = mpar2.Sy;
+            end
 
             % Element calculations for
-            [fe_int, Ke,fe_ext, state_new, stress_new] = ThermQuadTriang(ed,...
-                d_ae,Ex(iel,:),Ey(iel,:),De,d,state_old(:,:,iel),...
-                stress_old(:,:,iel), mpar, T(i),dT,alpha);
+            [fe_int, Ke,fe_ext, state_new, stress_new] = BiThermQuadTriang(ed,...
+                d_ae,Ex(iel,:),Ey(iel,:),Ds,Da,d,state_old(:,:,iel),...
+                stress_old(:,:,iel), mpar, mpar2,dT,alpha_s,alpha_a);
 
             % Assembling
             fint(Edof(iel,2:end))=fint(Edof(iel,2:end))+fe_int;
@@ -162,7 +161,7 @@ for i=1:ntime
         niter=niter+1; %update iter counter
         [niter unbal]  %print on screen
 
-        if niter>400
+        if niter>40
             disp('no convergence in Newton iteration')
             break
         end
@@ -202,6 +201,6 @@ end
 
 % Analytical solution of cantilever beam
 % https://www.engineeringtoolbox.com/cantilever-beams-d_1848.html
-sigma = mpar.Emod * alpha * (Tmax-Tmin);
+sigma = mpar.Emod * alpha_s * (Tmax-Tmin);
 F_anal = sigma * h*d;
 F_FE = fint(5) + fint(9) + fint(3);
