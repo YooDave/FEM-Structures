@@ -212,6 +212,9 @@ for i = 1:nelem
 end
 
 niter_total(1) = [];
+plot(t,niter_total)
+xlabel('Time step')
+ylabel('Number of iterations')
 
 % Analytical solution of cantilever beam
 % https://www.engineeringtoolbox.com/cantilever-beams-d_1848.html

@@ -59,7 +59,7 @@ da=a-aold;
 
 % Define free dofs and constrained dofs
 dof_F=[1:ndofs]; 
-dof_C=[1 2 3 4 5 6 7 8 9 10 13 14 15 16 17 18];
+dof_C=[2 4 6 8 10 12 14 16 18];
 dof_F(dof_C) = []; %removing the prescribed dofs from dof_F
 
 % Time stepping
@@ -86,7 +86,7 @@ f_ext(6) = P;
 
 % Temperature control
 Tmin = 0;
-Tmax = 10;
+Tmax = 300;
 T = linspace(Tmin,Tmax,ntime);
 dT = 0;
 
@@ -174,7 +174,7 @@ for i=1:ntime
     end
 
     niter_total = cat(1,niter_total,niter);
-    F(i) = -fint(5);
+    F(i) = -fint(6)-fint(14)-fint(16);
     
     stress_old = stress;
     state_old = state;
@@ -193,6 +193,10 @@ ylabel('$F$ [N]','FontSize',16,'interpreter','latex')
 grid on
 % 
 % P = F(end);
+niter_total(1) = [];
+plot(t,niter_total)
+xlabel('Time step')
+ylabel('Number of iterations')
 
 stress_total = zeros(4,1,nelem);
 stress_avg = zeros(nelem,1);
