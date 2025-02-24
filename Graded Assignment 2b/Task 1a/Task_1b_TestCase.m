@@ -1,0 +1,18 @@
+% Task 1b test case
+
+Ex = [2 11 12 3]*1e-3;
+Ey = [4 5 21 22]*1e-3;
+t = 50e-3;
+E = 80e9;
+nu = 0.2;
+G_modulus = E/(2*(1+nu));
+G = G_modulus*eye(2,2);
+D = hooke(1,E,nu); % Note: Thin plate = plane stress 2D assumption
+q = 0.5*1e3; % Out-of-plane load qz
+
+Dbar=D*t^3/12;
+ptype = 1;
+h = 1;
+body = q/4;
+
+[Ke, fe_ext] = ownKirchhoffQuad(Ex,Ey,[ptype h],Dbar,body);
