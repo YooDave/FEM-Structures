@@ -1,5 +1,6 @@
 % Task 1b test case
-
+clc 
+clear all 
 Ex = [2 11 12 3]*1e-3;
 Ey = [4 5 21 22]*1e-3;
 t = 50e-3;
@@ -14,7 +15,7 @@ q = 0.5*1e3; % Out-of-plane load qz
 Dbar=D*t^3/12;
 
 h = 1;
-body=q
+body=q;
 % Define problem parameters
 xmin = 0; xmax = 2; % Plate length in meters
 ymin = 0; ymax = 2; % Plate height in meters
@@ -22,6 +23,6 @@ nelx = 10; % Number of elements along x-direction
 nely = 5;  % Number of elements along y-direction
 
 % Call the mesh generator
-[mesh, coord, Edof_ip, Edof_oop] = rectMesh(xmin, xmax, ymin, ymax, nelx, nely);
-
-[Kww, fe_ext,Kuu,Bu] = ownKirchhoffQuad(Ex,Ey,[ptype h],Dbar,body,Be,t,D);
+% [mesh, coord, Edof_ip, Edof_oop] = rectMesh(xmin, xmax, ymin, ymax, nelx, nely);
+[Kww, fe_ext,Kuu,Bu] = ownKirchhoffQuad(Ex,Ey,[ptype h],Dbar,body,t,D);
+F_nodal_total = sum(fe_ext)

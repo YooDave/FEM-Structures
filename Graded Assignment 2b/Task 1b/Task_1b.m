@@ -12,17 +12,24 @@ ptype = 1;
 D = hooke(1,E,nu); % Note: Thin plate = plane stress 2D assumption
 q = 0.5*1e3; % Out-of-plane load qz
 
-Dbar=D*t^3/12;
 
-h = 1;
-body=q;
 % Define problem parameters
 xmin = 0; xmax = 2; % Plate length in meters
 ymin = 0; ymax = 2; % Plate height in meters
 nelx = 10; % Number of elements along x-direction
 nely = 5;  % Number of elements along y-direction
-
 % Call the mesh generator
-[mesh, coord, Edof_ip, Edof_oop] = rectMesh(xmin, xmax, ymin, ymax, nelx, nely);
+[mesh, Coord, Edof_ip, Edof_oop] = rectMesh(xmin, xmax, ymin, ymax, nelx, nely);
+
+[Ex,Ey]=coordxtr(Edof_ip,Coord,dof,4);
+
+
+Dbar=D*t^3/12;
+
+h = 1;
+body=q;
+
+
+
 [Kww, fe_ext,Kuu,Bu] = ownKirchhoffQuad(Ex,Ey,[ptype h],Dbar,body,t,D);
 F_nodal_total = sum(fe_ext)
