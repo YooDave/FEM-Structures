@@ -39,11 +39,10 @@ end
 Edof_ip = full(Edof_ip); 
 Edof_oop = full(Edof_oop);
 
-elcoord=[Ex(:,1) Ey(:,1) ; Ex(:,2) Ey(:,2)  ;Ex(:,3) Ey(:,3) ; Ex(:,4) Ey(:,4) ]; %Coordinate system of  all elements
+elcoord=[Ex(:,1) Ey(:,1) ; Ex(:,2) Ey(:,2)  ;Ex(:,3) Ey(:,3) ; Ex(:,4) Ey(:,4) ] %coordinate system of  all elements
 
-Xcoord = elcoord(:,1); Ycoord = elcoord(:,2);
+X_coord = elcoord(:,1); Y_coord = elcoord(:,2);
 
-LeftSide_nodes=find(abs(Xcoord-L)<100*eps)';
 
 Dbar=D*t^3/12;
 
