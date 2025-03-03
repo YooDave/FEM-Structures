@@ -1,6 +1,4 @@
-function [Keww, few_ext,Keuu,Bu] = ownKirchhoffQuad(Ex,Ey,eq,Dbar,p,t,D)
-ptype = eq(1);
-h = eq(2);
+function [Keww, few_ext,Keuu,Bu] = KirchhoffQuad1c(Ex,Ey,Dbar,p,t,D)
 
 %gauss points
 H_v = ones(1,4);
