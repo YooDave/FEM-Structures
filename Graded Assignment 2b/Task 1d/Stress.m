@@ -1,0 +1,25 @@
+function [sigma] = Stress(Dbar,au,aw,t,Ex,Ey)
+
+xi_v = [-1/sqrt(3) -1/sqrt(3) 1/sqrt(3) 1/sqrt(3);
+    -1/sqrt(3) 1/sqrt(3) -1/sqrt(3) 1/sqrt(3)];
+
+sigma_temp = zeros(3,4);
+
+for gp=1:4
+    
+    xin = xi_v(:,gp);
+
+    Bastn = Bast_kirchoff_func(xin,[ Ex(1) Ey(1) ]', ...
+        [ Ex(2) Ey(2) ]', ...
+        [ Ex(3) Ey(3) ]',...
+        [ Ex(4) Ey(4) ]');
+
+    [Be,~,~]= Be_quad_func(xin,[Ex(1) Ey(1)]',[Ex(2) Ey(2)]',[Ex(3) Ey(3)]',[Ex(4) Ey(4)]');
+
+    sigma_temp(:,gp) = Dbar*(Be*au-t/2*Bastn*aw);
+
+end
+
+sigma = mean(sigma_temp,2);
+
+end

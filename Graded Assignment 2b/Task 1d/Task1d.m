@@ -1,4 +1,4 @@
-%% Task 1c - Solving FE problem
+%% Task 1d - Solving FE problem
 clc 
 clear all 
 %---------------------------------------------------------
@@ -100,7 +100,7 @@ for iel = 1:nel
 
     p = rho*g*y_avg;
     
-    [Keww, few_ext,Keuu,Bu] = KirchhoffQuad1c(Ex(iel,:),Ey(iel,:),Dbar,p,t,D);
+    [Keww, few_ext,Keuu,Bu] = StressKirchhoffQuad(Ex(iel,:),Ey(iel,:),Dbar,p,t,D);
 
     fw_ext(Edof_oop(iel,2:end)) = fw_ext(Edof_oop(iel,2:end)) + few_ext;
 
@@ -126,23 +126,29 @@ fu_extC = Kuu(dofu_C, dofu_F)*a_F + Kuu(dofu_C, dofu_C)*au(dofu_C) - fu_ext(dofu
 % Displacement for in plane problem
 au(dofu_F) = a_F;
 
-% Plotting for in plane displacement using CALFEM
-ed_u = extract_dofs(Edof_ip,au);
-sfac = 2E5;
-figure
-eldisp2(Ex,Ey,ed_u,[1 1 0],sfac);
-set(gca,'YDir','reverse');
-set(gca,'XDir','reverse');
+sigma = zeros(3,nel);
 
-
-% Plotting of oop displacement using the fill command
-ed_w = extract_dofs(Edof_oop,aw);
-figure;
-hold on;
-for i = 1:size(Ex,1) 
-    fill(Ex(i,:), Ey(i,:), mean(ed_w(i,1:3:end)));
+for iel = 1:nel
+    sigma(:,iel) = Stress(Dbar,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),t,Ex(iel,:),Ey(iel,:));
 end
-hold off;
-colorbar;
-set(gca,'YDir','reverse');
-set(gca,'XDir','reverse');
+
+% % Plotting for in plane displacement using CALFEM
+% ed_u = extract_dofs(Edof_ip,au);
+% sfac = 2E5;
+% figure
+% eldisp2(Ex,Ey,ed_u,[1 1 0],sfac);
+% set(gca,'YDir','reverse');
+% set(gca,'XDir','reverse');
+% 
+% 
+% % Plotting of oop displacement using the fill command
+% ed_w = extract_dofs(Edof_oop,aw);
+% figure;
+% hold on;
+% for i = 1:size(Ex,1) 
+%     fill(Ex(i,:), Ey(i,:), mean(ed_w(i,1:3:end)));
+% end
+% hold off;
+% colorbar;
+% set(gca,'YDir','reverse');
+% set(gca,'XDir','reverse');

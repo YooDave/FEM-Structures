@@ -1,4 +1,4 @@
-function [Keww, few_ext,Keuu,Bu] = KirchhoffQuad1c(Ex,Ey,Dbar,p,t,D)
+function [Keww, few_ext,Keuu,Be] = StressKirchhoffQuad(Ex,Ey,Dbar,p,t,D)
 
 %gauss points
 H_v = ones(1,4);
@@ -31,8 +31,8 @@ for gp=1:4
     Keww= Keww + Bastn'*Dbar*Bastn*detFisop*Hgp;
 
     %iNPLANe
-    [Bu,~,~]= Be_quad_func(xin,[Ex(1) Ey(1)]',[Ex(2) Ey(2)]',[Ex(3) Ey(3)]',[Ex(4) Ey(4)]');
-    Keuu= Keuu + Bu'*D*t*Bu*detFisop*Hgp;
+    [Be,~,~]= Be_quad_func(xin,[Ex(1) Ey(1)]',[Ex(2) Ey(2)]',[Ex(3) Ey(3)]',[Ex(4) Ey(4)]');
+    Keuu= Keuu + Be'*D*t*Be*detFisop*Hgp;
 
     %finding Force external
     few_ext = few_ext + N'*detFisop*Hgp*p;
