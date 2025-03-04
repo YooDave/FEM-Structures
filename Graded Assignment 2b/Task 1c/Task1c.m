@@ -21,8 +21,8 @@ Dbar=D*t^3/12; % Dbar matrix
 xmin = 0; xmax = L; % Plate length in meters
 ymin = 0; ymax = H; % Plate height in meters
 
-nelx = 20; % Number of elements along x-direction
-nely = 20;  % Number of elements along y-direction
+nelx = 3; % Number of elements along x-direction
+nely = 3;  % Number of elements along y-direction
 nel = nelx*nely; % Total number of elements
 
 % Calling rectMesh function

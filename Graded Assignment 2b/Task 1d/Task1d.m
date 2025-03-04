@@ -132,6 +132,33 @@ for iel = 1:nel
     sigma(:,iel) = Stress(Dbar,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),t,Ex(iel,:),Ey(iel,:));
 end
 
+% Extract displacement data
+ed_w = extract_dofs(Edof_oop,aw);
+
+% Initialize figure
+figure;
+hold on;
+
+% Loop over each element and plot the stress
+for i = 1:size(Ex,1) 
+    % Calculate average stress for the element
+    stress_avg = mean(sigma(:,i));
+    
+    % Draw each element as a filled polygon with color based on stress
+    fill(Ex(i,:), Ey(i,:), stress_avg);
+end
+
+% Add colorbar and axis settings
+hold off;
+colorbar;
+title('Stress Distribution');
+xlabel('X-coordinate (m)');
+ylabel('Y-coordinate (m)');
+axis equal;
+set(gca,'YDir','reverse');
+set(gca,'XDir','reverse');
+
+
 % % Plotting for in plane displacement using CALFEM
 % ed_u = extract_dofs(Edof_ip,au);
 % sfac = 2E5;
