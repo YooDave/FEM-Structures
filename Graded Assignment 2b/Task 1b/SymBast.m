@@ -13,4 +13,8 @@ diff(dNdx(:,2),xi(2))*invFisop(2,2);
 Bast(3,:) = 2*(diff(dNdx(:,1),xi(1))*invFisop(1,2) + ...
 diff(dNdx(:,1),xi(2))*invFisop(2,2));
 %and a function can be written
+
+B = dNdx;
+
 matlabFunction(Bast,'File','Bast_kirchoff_func','Vars',{xi,xe1,xe2,xe3,xe4});
+matlabFunction(B,'File','B_matrix','Vars',{xi,xe1,xe2,xe3,xe4});

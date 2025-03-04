@@ -14,6 +14,8 @@ H=2; % Height of pool
 l=1; % Width of big mac's platform 
 m = 150; % Big mac in kg
 
+z = [t/2 , 0, -t/2];
+
 Dbar=D*t^3/12; % Dbar matrix
 
 
@@ -89,6 +91,8 @@ end
 Kww = zeros(ndofs_op);
 Kuu = zeros(ndofs_ip);
 
+% Pressure vector
+p = zeros(nel,1);
 
 %---------------------------------------------------------
 % Element routine
@@ -98,14 +102,17 @@ for iel = 1:nel
     
     y_avg = (max(Ey(iel,:))+min(Ey(iel,:)))/2;
 
-    p = rho*g*y_avg;
+    p(iel) = rho*g*y_avg;
     
-    [Keww, few_ext,Keuu,Bu] = StressKirchhoffQuad(Ex(iel,:),Ey(iel,:),Dbar,p,t,D);
+    [Keww, few_ext,Keuu] = StressKirchhoffQuad(Ex(iel,:),Ey(iel,:),Dbar,p(iel),t,D);
 
     fw_ext(Edof_oop(iel,2:end)) = fw_ext(Edof_oop(iel,2:end)) + few_ext;
 
     Kww(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) = Kww(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) + Keww;
     Kuu(Edof_ip(iel,2:end),Edof_ip(iel,2:end)) = Kuu(Edof_ip(iel,2:end),Edof_ip(iel,2:end)) + Keuu;
+
+    % [Kww,fw_ext]=assem(Edof_oop,Kww,Keww,fw_ext,few_ext);
+    % Kuu =assem(Edof_ip,Kuu,Keuu);
 
 end
 %---------------------------------------------------------
@@ -126,10 +133,24 @@ fu_extC = Kuu(dofu_C, dofu_F)*a_F + Kuu(dofu_C, dofu_C)*au(dofu_C) - fu_ext(dofu
 % Displacement for in plane problem
 au(dofu_F) = a_F;
 
-sigma = zeros(3,4,nel);
+sigma = zeros(3,nel,3);
+vm_stress = zeros(3,nel);
 
 for iel = 1:nel
-    sigma(:,:,iel) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),t,Ex(iel,:),Ey(iel,:));
+
+    % Mean stresses for three thickness points
+    sigma(:,iel,1) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(1),Ex(iel,:),Ey(iel,:));
+    sigma(:,iel,2) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(2),Ex(iel,:),Ey(iel,:));
+    sigma(:,iel,3) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(3),Ex(iel,:),Ey(iel,:));
+    
+    % 
+    vm_stress(1,iel) = VonMisesStress(sigma(:,iel,1));
+    vm_stress(2,iel) = VonMisesStress(sigma(:,iel,2));
+    vm_stress(3,iel) = VonMisesStress(sigma(:,iel,1));
+end
+
+for iel = 1:nel
+    [Ge,Keww] = Buckling(sigma(:,iel,2),t,Ex(iel,:),Ey(iel,:),Dbar,p(iel),D);
 end
 
 % Extract displacement data
