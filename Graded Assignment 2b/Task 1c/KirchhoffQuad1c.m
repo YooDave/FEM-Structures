@@ -31,8 +31,8 @@ for gp=1:4
     Keww= Keww + Bastn'*Dbar*Bastn*detFisop*Hgp;
 
     %iNPLANe
-    [Bu,~,~]= Be_quad_func(xin,[Ex(1) Ey(1)]',[Ex(2) Ey(2)]',[Ex(3) Ey(3)]',[Ex(4) Ey(4)]');
-    Keuu= Keuu + Bu'*D*t*Bu*detFisop*Hgp;
+    [Bu,detFisop_uu,~]= Be_quad_func(xin,[Ex(1) Ey(1)]',[Ex(2) Ey(2)]',[Ex(3) Ey(3)]',[Ex(4) Ey(4)]');
+    Keuu= Keuu + Bu'*D*t*Bu*detFisop_uu*Hgp;
 
     %finding Force external
     few_ext = few_ext + N'*detFisop*Hgp*p;

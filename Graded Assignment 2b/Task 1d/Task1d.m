@@ -14,6 +14,8 @@ H=2; % Height of pool
 l=1; % Width of big mac's platform 
 m = 150; % Big mac in kg
 
+z = [t/2 , 0, -t/2];
+
 Dbar=D*t^3/12; % Dbar matrix
 
 
@@ -126,10 +128,20 @@ fu_extC = Kuu(dofu_C, dofu_F)*a_F + Kuu(dofu_C, dofu_C)*au(dofu_C) - fu_ext(dofu
 % Displacement for in plane problem
 au(dofu_F) = a_F;
 
-sigma = zeros(3,nel);
+sigma = zeros(3,nel,3);
+vm_stress = zeros(3,nel);
 
 for iel = 1:nel
-    sigma(:,iel) = Stress(Dbar,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),t,Ex(iel,:),Ey(iel,:));
+
+    % Mean stresses for three thickness points
+    sigma(:,iel,1) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(1),Ex(iel,:),Ey(iel,:));
+    sigma(:,iel,2) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(2),Ex(iel,:),Ey(iel,:));
+    sigma(:,iel,3) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(3),Ex(iel,:),Ey(iel,:));
+    
+    % 
+    vm_stress(1,iel) = VonMisesStress(sigma(:,iel,1));
+    vm_stress(2,iel) = VonMisesStress(sigma(:,iel,2));
+    vm_stress(3,iel) = VonMisesStress(sigma(:,iel,1));
 end
 
 % Extract displacement data
