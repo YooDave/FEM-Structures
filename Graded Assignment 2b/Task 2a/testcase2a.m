@@ -8,11 +8,10 @@ G_modulus = E/(2*(1+nu));
 G = G_modulus*eye(2,2);
 D = hooke(1,E,nu); % Note: Thin plate = plane stress 2D assumption
 Dbar=D*t^3/12; % Dbar matrix
-sigma2D = [1 2; 2 3]*1e6; 
+sigma2D = [1;3;2]*1E6;
 
 p = 1;
 
 X = [Ex(1) Ey(1) Ex(2) Ey(2) Ex(3) Ey(3) Ex(4) Ey(4)]';
-Ne_sec_test = sigma2D * t;
 
-[Ge,Keww] = Buckling(Ne_sec_test,t,Ex,Ey,Dbar,p,D);
+[Ge,Keww] = Buckling(sigma2D,t,Ex,Ey,Dbar,p,D);
