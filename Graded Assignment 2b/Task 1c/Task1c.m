@@ -139,8 +139,9 @@ set(gca,'XDir','reverse');
 ed_w = extract_dofs(Edof_oop,aw);
 figure;
 hold on;
-fill3(Ex', Ey', ed_w(:,1:3:end)',ed_w(:,1:3:end)');
-view(3);
+for i = 1:size(Ex,1) 
+    fill(Ex(i,:), Ey(i,:), mean(ed_w(i,1:3:end)));
+end
 hold off;
 colorbar;
 set(gca,'YDir','reverse');
