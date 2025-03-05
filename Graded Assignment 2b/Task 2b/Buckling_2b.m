@@ -1,3 +1,4 @@
+
 function [Ge,Keww] = Buckling_2b(sigma,t,Ex,Ey,Dbar,p,D)
 
 sigma_mat = [sigma(1), sigma(3); sigma(3), sigma(2)];
