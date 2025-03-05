@@ -1,4 +1,4 @@
-function [Keww, few_ext,Keuu,Be] = StressKirchhoffQuad(Ex,Ey,Dbar,p,t,D)
+function [Keww, few_ext,Keuu,Be] = KirchhoffQuad_2a(Ex,Ey,Dbar,p,t,D)
 
 %gauss points
 H_v = ones(1,4);

@@ -15,7 +15,7 @@ H_v=[0.309 0.494 0.309 0.494 0.790 0.494 0.309 0.494 0.309];
 Ge = zeros(12);
 
 for gp = 1:ngp
-    
+
     Hgp = H_v(gp);
     xin = xi_v(:,gp);
 
@@ -26,6 +26,6 @@ for gp = 1:ngp
 
 end
 
-[Keww, ~,~,~] = StressKirchhoffQuad(Ex,Ey,Dbar,p,t,D);
+[Keww, ~,~,~] = KirchhoffQuad_2a(Ex,Ey,Dbar,p,t,D);
 
 end
