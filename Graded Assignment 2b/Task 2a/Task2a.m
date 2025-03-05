@@ -1,4 +1,4 @@
-%% Task 1d - Solving FE problem
+%% Task 2a - Solving FE problem
 clc 
 clear all 
 %---------------------------------------------------------
@@ -149,8 +149,11 @@ for iel = 1:nel
     vm_stress(3,iel) = VonMisesStress(sigma(:,iel,1));
 end
 
+Ge = zeros(12,12,nel);
+Keww = Ge;
+
 for iel = 1:nel
-    [Ge,Keww] = Buckling(sigma(:,iel,2),t,Ex(iel,:),Ey(iel,:),Dbar,p(iel),D);
+    [Ge(:,:,iel),Keww(:,:,iel)] = Buckling(sigma(:,iel,2),t,Ex(iel,:),Ey(iel,:),Dbar,p(iel),D);
 end
 
 % Extract displacement data

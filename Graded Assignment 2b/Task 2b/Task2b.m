@@ -1,4 +1,4 @@
-%% Task 1d - Solving FE problem
+%% Task 2b - Solving FE problem
 clc 
 clear all 
 %---------------------------------------------------------
@@ -133,36 +133,31 @@ fu_extC = Kuu(dofu_C, dofu_F)*a_F + Kuu(dofu_C, dofu_C)*au(dofu_C) - fu_ext(dofu
 % Displacement for in plane problem
 au(dofu_F) = a_F;
 
-sigma = zeros(3,nel,3);
-vm_stress = zeros(3,nel);
+Kww = zeros(ndofs_op);
+G = Kww;
+sigma = zeros(3,nel);
+Ge = zeros(12,12,nel);
+Keww = Ge;
 
 for iel = 1:nel
 
-    % Mean stresses for three thickness points
-    sigma(:,iel,1) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(1),Ex(iel,:),Ey(iel,:));
-    sigma(:,iel,2) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(2),Ex(iel,:),Ey(iel,:));
-    sigma(:,iel,3) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(3),Ex(iel,:),Ey(iel,:));
-    
-    % 
-    vm_stress(1,iel) = VonMisesStress(sigma(:,iel,1));
-    vm_stress(2,iel) = VonMisesStress(sigma(:,iel,2));
-    vm_stress(3,iel) = VonMisesStress(sigma(:,iel,1));
-end
+    sigma(:,iel) = Stress_2b(D,au(Edof_ip(iel,2:end)),Ex(iel,:),Ey(iel,:));
+    [Ge,Keww,Be] = Buckling_2b(sigma(:,iel),t,Ex(iel,:),Ey(iel,:),Dbar,p(iel),D);
 
-for iel = 1:nel
-    [Ge,Keww,Keuu,Be] = Buckling_2b(sigma(:,iel,2),t,Ex(iel,:),Ey(iel,:),Dbar,p(iel),D);
-end
-
-for i=1:nel
-    sigma_bar=D*Be*au(Edof_ip(i,2:end),1);
-    %[Ge,Keww,Keuu,Be] = Buckling_2b(sigma_bar,t,Ex,Ey,Dbar,p,D) 
-    %Need topass the sigma-bar matrix into the Buckling_2b function and then idk wht to do . But Raeed has an idea u can ask him.  
+    Kww(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) = Kww(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) + Keww;
+    G(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) = G(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) + Ge; 
 end
 
 
+n_lambda = 5;
 
-% Extract displacement data
-ed_w = extract_dofs(Edof_oop,aw);
+[V,D] = eigs(Kww(dofw_F,dofw_F),-G(dofw_F,dofw_F),n_lambda,'smallestabs');
+
+d = diag(D);
+[d_sort, indx] = sort(d);
+indx_min = min(find(d_sort>0));
+lambda_1 = d(indx(indx_min));
+z_1 = V(:,indx(indx_min));
 
 
 
