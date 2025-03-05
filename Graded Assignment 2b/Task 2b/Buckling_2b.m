@@ -1,6 +1,6 @@
-function [Ge,Keww,Be] = Buckling_2b(sigma_bar,t,Ex,Ey,Dbar,p,D)
+function [Ge,Keww] = Buckling_2b(sigma,t,Ex,Ey,Dbar,p,D)
 
-sigma_mat = [sigma_bar(1), sigma_bar(3); sigma_bar(3), sigma_bar(2)];
+sigma_mat = [sigma(1), sigma(3); sigma(3), sigma(2)];
 
 Nsec = sigma_mat*t;
 
@@ -25,6 +25,6 @@ for gp = 1:ngp
 
 end
 
-[Keww, ~,~,Be] = KirchhoffQuad_2a(Ex,Ey,Dbar,p,t,D);
+[Keww, ~,~,~] = KirchhoffQuad_2a(Ex,Ey,Dbar,p,t,D);
 
 end

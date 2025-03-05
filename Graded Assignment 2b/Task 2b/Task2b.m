@@ -142,7 +142,7 @@ Keww = Ge;
 for iel = 1:nel
 
     sigma(:,iel) = Stress_2b(D,au(Edof_ip(iel,2:end)),Ex(iel,:),Ey(iel,:));
-    [Ge,Keww,Be] = Buckling_2b(sigma(:,iel),t,Ex(iel,:),Ey(iel,:),Dbar,p(iel),D);
+    [Ge,Keww] = Buckling_2b(sigma(:,iel),t,Ex(iel,:),Ey(iel,:),Dbar,p(iel),D);
 
     Kww(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) = Kww(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) + Keww;
     G(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) = G(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) + Ge; 
@@ -159,55 +159,3 @@ indx_min = min(find(d_sort>0));
 lambda_1 = d(indx(indx_min));
 z_1 = V(:,indx(indx_min));
 
-
-
-
-
-
-
-
-% 
-% % Initialize figure
-% figure;
-% hold on;
-% 
-% % Loop over each element and plot the stress
-% for i = 1:size(Ex,1) 
-%     % Calculate average stress for the element
-%     stress_avg = mean(sigma(:,i));
-% 
-%     % Draw each element as a filled polygon with color based on stress
-%     fill(Ex(i,:), Ey(i,:), stress_avg);
-% end
-% 
-% % Add colorbar and axis settings
-% hold off;
-% colorbar;
-% title('Stress Distribution');
-% xlabel('X-coordinate (m)');
-% ylabel('Y-coordinate (m)');
-% axis equal;
-% set(gca,'YDir','reverse');
-% set(gca,'XDir','reverse');
-% 
-
-% % Plotting for in plane displacement using CALFEM
-% ed_u = extract_dofs(Edof_ip,au);
-% sfac = 2E5;
-% figure
-% eldisp2(Ex,Ey,ed_u,[1 1 0],sfac);
-% set(gca,'YDir','reverse');
-% set(gca,'XDir','reverse');
-% 
-% 
-% % Plotting of oop displacement using the fill command
-% ed_w = extract_dofs(Edof_oop,aw);
-% figure;
-% hold on;
-% for i = 1:size(Ex,1) 
-%     fill(Ex(i,:), Ey(i,:), mean(ed_w(i,1:3:end)));
-% end
-% hold off;
-% colorbar;
-% set(gca,'YDir','reverse');
-% set(gca,'XDir','reverse');
