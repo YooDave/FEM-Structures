@@ -180,23 +180,29 @@ set(gca,'YDir','reverse');
 set(gca,'XDir','reverse');
 
 
-% % Plotting for in plane displacement using CALFEM
-% ed_u = extract_dofs(Edof_ip,au);
-% sfac = 2E5;
-% figure
-% eldisp2(Ex,Ey,ed_u,[1 1 0],sfac);
-% set(gca,'YDir','reverse');
-% set(gca,'XDir','reverse');
-% 
-% 
-% % Plotting of oop displacement using the fill command
-% ed_w = extract_dofs(Edof_oop,aw);
-% figure;
-% hold on;
-% for i = 1:size(Ex,1) 
-%     fill(Ex(i,:), Ey(i,:), mean(ed_w(i,1:3:end)));
-% end
-% hold off;
-% colorbar;
-% set(gca,'YDir','reverse');
-% set(gca,'XDir','reverse');
+% Plotting for in plane displacement using CALFEM
+ed_u = extract_dofs(Edof_ip,au);
+sfac = 2E5;
+figure
+eldisp2(Ex,Ey,ed_u,[1 1 0],sfac);
+title('In plane Deformation');
+xlabel('X-coordinate (m)');
+ylabel('Y-coordinate (m)');
+set(gca,'YDir','reverse');
+set(gca,'XDir','reverse');
+
+
+% Plotting of oop displacement using the fill command
+ed_w = extract_dofs(Edof_oop,aw);
+figure;
+hold on;
+for i = 1:size(Ex,1) 
+    fill(Ex(i,:), Ey(i,:), mean(ed_w(i,1:3:end)));
+end
+hold off;
+colorbar;
+title('Stress Distribution');
+xlabel('X-coordinate (m)');
+ylabel('Y-coordinate (m)');
+set(gca,'YDir','reverse');
+set(gca,'XDir','reverse');

@@ -21,8 +21,6 @@ for gp = 1:ngp
     [~,detFisop,~]= Be_quad_func(xin,[Ex(1) Ey(1)]',[Ex(2) Ey(2)]',[Ex(3) Ey(3)]',[Ex(4) Ey(4)]');
     B = B_matrix(xin,[Ex(1) Ey(1)]',[Ex(2) Ey(2)]',[Ex(3) Ey(3)]',[Ex(4) Ey(4)]');
 
-    Ge = Ge + B*Nsec*B'*detFisop * Hgp;
-
 end
 
 [Keww, ~,Keuu,Be] = KirchhoffQuad_2a(Ex,Ey,Dbar,p,t,D);

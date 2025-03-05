@@ -155,7 +155,8 @@ end
 
 for i=1:nel
     sigma_bar=D*Be*au(Edof_ip(i,2:end),1);
-    [Ge,Keww,Keuu,Be] = Buckling_2b(sigma_bar,t,Ex,Ey,Dbar,p,D)
+    %[Ge,Keww,Keuu,Be] = Buckling_2b(sigma_bar,t,Ex,Ey,Dbar,p,D) 
+    %Need topass the sigma-bar matrix into the Buckling_2b function and then idk wht to do . But Raeed has an idea u can ask him.  
 end
 
 
