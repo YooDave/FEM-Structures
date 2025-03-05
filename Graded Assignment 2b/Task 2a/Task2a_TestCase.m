@@ -1,3 +1,4 @@
+
 % Test case
 Ex = [2 11 12 3]*1e-3;
 Ey = [4 5 21 22]*1e-3;
@@ -14,4 +15,4 @@ p = 1;
 
 X = [Ex(1) Ey(1) Ex(2) Ey(2) Ex(3) Ey(3) Ex(4) Ey(4)]';
 
-[Ge,Keww] = Buckling(sigma2D,t,Ex,Ey,Dbar,p,D);
+[Ge,Keww,Keuu] = Buckling(sigma2D,t,Ex,Ey,Dbar,p,D);
