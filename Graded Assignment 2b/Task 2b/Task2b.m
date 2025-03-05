@@ -159,15 +159,3 @@ indx_min = min(find(d_sort>0));
 lambda_1 = d(indx(indx_min));
 z_1 = V(:,indx(indx_min));
 
-z1_global=zeros(ndofs_op,1);
-z1_global(dofw_F)=z_1;
-
-ed_w=extract_dofs(Edof_oop,z1_global);
-figure;
-hold on;
-fill3(Ex', Ey', ed_w(:,1:3:end)',ed_w(:,1:3:end)');
-view(3);
-hold off;
-colorbar;
-set(gca,'YDir','reverse');
-set(gca,'XDir','reverse');
