@@ -172,6 +172,9 @@ colorbar;
 set(gca,'YDir','reverse');
 set(gca,'XDir','reverse');
 
+
+
+
 % 
 % % Initialize figure
 % figure;
