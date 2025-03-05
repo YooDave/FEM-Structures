@@ -1,4 +1,4 @@
-%% Task 1d - Solving FE problem
+%% Task 2b - Solving FE problem
 clc 
 clear all 
 %---------------------------------------------------------
@@ -133,87 +133,41 @@ fu_extC = Kuu(dofu_C, dofu_F)*a_F + Kuu(dofu_C, dofu_C)*au(dofu_C) - fu_ext(dofu
 % Displacement for in plane problem
 au(dofu_F) = a_F;
 
-sigma = zeros(3,nel,3);
-vm_stress = zeros(3,nel);
+Kww = zeros(ndofs_op);
+G = Kww;
+sigma = zeros(3,nel);
+Ge = zeros(12,12,nel);
+Keww = Ge;
 
 for iel = 1:nel
 
-    % Mean stresses for three thickness points
-    sigma(:,iel,1) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(1),Ex(iel,:),Ey(iel,:));
-    sigma(:,iel,2) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(2),Ex(iel,:),Ey(iel,:));
-    sigma(:,iel,3) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(3),Ex(iel,:),Ey(iel,:));
-    
-    % 
-    vm_stress(1,iel) = VonMisesStress(sigma(:,iel,1));
-    vm_stress(2,iel) = VonMisesStress(sigma(:,iel,2));
-    vm_stress(3,iel) = VonMisesStress(sigma(:,iel,1));
-end
+    sigma(:,iel) = Stress_2b(D,au(Edof_ip(iel,2:end)),Ex(iel,:),Ey(iel,:));
+    [Ge,Keww] = Buckling_2b(sigma(:,iel),t,Ex(iel,:),Ey(iel,:),Dbar,p(iel),D);
 
-for iel = 1:nel
-    [Ge,Keww,Keuu,Be] = Buckling_2b(sigma(:,iel,2),t,Ex(iel,:),Ey(iel,:),Dbar,p(iel),D);
-end
-
-for i=1:nel
-    sigma_bar=D*Be*au(Edof_ip(i,2:end),1);
-    s=[sigma_bar(1,1) , sigma_bar(2,1);sigma_bar(2,1) , sigma_bar(3,1)];  
-    Nsec=s*t
-    [~] = Buckling_2b(Nsec,t,Ex,Ey,Dbar,p,D)
+    Kww(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) = Kww(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) + Keww;
+    G(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) = G(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) + Ge; 
 end
 
 
+n_lambda = 5;
 
-% Extract displacement data
-ed_w = extract_dofs(Edof_oop,aw);
+[V,D] = eigs(Kww(dofw_F,dofw_F),-G(dofw_F,dofw_F),n_lambda,'smallestabs');
 
+d = diag(D);
+[d_sort, indx] = sort(d);
+indx_min = min(find(d_sort>0));
+lambda_1 = d(indx(indx_min));
+z_1 = V(:,indx(indx_min));
 
+z1_global=zeros(ndofs_op,1);
+z1_global(dofw_F)=z_1;
 
-
-
-
-
-
-% 
-% % Initialize figure
-% figure;
-% hold on;
-% 
-% % Loop over each element and plot the stress
-% for i = 1:size(Ex,1) 
-%     % Calculate average stress for the element
-%     stress_avg = mean(sigma(:,i));
-% 
-%     % Draw each element as a filled polygon with color based on stress
-%     fill(Ex(i,:), Ey(i,:), stress_avg);
-% end
-% 
-% % Add colorbar and axis settings
-% hold off;
-% colorbar;
-% title('Stress Distribution');
-% xlabel('X-coordinate (m)');
-% ylabel('Y-coordinate (m)');
-% axis equal;
-% set(gca,'YDir','reverse');
-% set(gca,'XDir','reverse');
-% 
-
-% % Plotting for in plane displacement using CALFEM
-% ed_u = extract_dofs(Edof_ip,au);
-% sfac = 2E5;
-% figure
-% eldisp2(Ex,Ey,ed_u,[1 1 0],sfac);
-% set(gca,'YDir','reverse');
-% set(gca,'XDir','reverse');
-% 
-% 
-% % Plotting of oop displacement using the fill command
-% ed_w = extract_dofs(Edof_oop,aw);
-% figure;
-% hold on;
-% for i = 1:size(Ex,1) 
-%     fill(Ex(i,:), Ey(i,:), mean(ed_w(i,1:3:end)));
-% end
-% hold off;
-% colorbar;
-% set(gca,'YDir','reverse');
-% set(gca,'XDir','reverse');
+ed_w=extract_dofs(Edof_oop,z1_global);
+figure;
+hold on;
+fill3(Ex', Ey', ed_w(:,1:3:end)',ed_w(:,1:3:end)');
+view(3);
+hold off;
+colorbar;
+set(gca,'YDir','reverse');
+set(gca,'XDir','reverse');
