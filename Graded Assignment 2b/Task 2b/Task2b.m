@@ -170,3 +170,6 @@ hold off;
 colorbar;
 set(gca,'YDir','reverse');
 set(gca,'XDir','reverse');
+xlabel('x-coordinate [m]');
+ylabel('y-coordinate [m]');
+zlabel('z-coordinate [m]');
