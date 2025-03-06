@@ -100,7 +100,7 @@ for iel = 1:nel
 
     p = rho*g*y_avg;
     
-    [Keww, few_ext,Keuu,Bu] = KirchhoffQuad1c(Ex(iel,:),Ey(iel,:),Dbar,p,t,D);
+    [Keww, few_ext,Keuu] = KirchhoffQuad1c(Ex(iel,:),Ey(iel,:),Dbar,p,t,D);
 
     fw_ext(Edof_oop(iel,2:end)) = fw_ext(Edof_oop(iel,2:end)) + few_ext;
 
@@ -133,6 +133,8 @@ figure
 eldisp2(Ex,Ey,ed_u,[1 1 0],sfac);
 set(gca,'YDir','reverse');
 set(gca,'XDir','reverse');
+xlabel('x-coordinate [m]');
+ylabel('y-coordinate [m]');
 
 
 % Plotting of oop displacement using the fill command
@@ -145,3 +147,6 @@ hold off;
 colorbar;
 set(gca,'YDir','reverse');
 set(gca,'XDir','reverse');
+xlabel('x-coordinate [m]');
+ylabel('y-coordinate [m]');
+zlabel('z-coordinate [m]');

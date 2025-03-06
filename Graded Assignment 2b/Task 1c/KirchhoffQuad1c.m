@@ -1,4 +1,4 @@
-function [Keww, few_ext,Keuu,Bu] = KirchhoffQuad1c(Ex,Ey,Dbar,p,t,D)
+function [Keww, few_ext,Keuu] = KirchhoffQuad1c(Ex,Ey,Dbar,p,t,D)
 
 %gauss points
 H_v = ones(1,4);
