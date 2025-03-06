@@ -62,12 +62,6 @@ ndofs_ip = 2*length(Coord(:,1));
 ndofs_op = 3*length(Coord(:,1));
 
 
-% dof_left=zeros(2*length(LeftSide_nodes),1);
-% for i = 1:length(LeftSide_nodes)
-%     dof_left(i:i+1) = [(LeftSide_nodes(i)-1)*2 + 1;(LeftSide_nodes(i)-1)*2];
-%     i=i+1;
-% end
-
 fw_ext = zeros(ndofs_op,1);
 fu_ext = zeros(ndofs_ip,1);
 
@@ -97,6 +91,6 @@ for iel = 1:nel
 
 end
 
-F_nodal_total = sum(fw_ext);
+F_nodal_total = sum(fw_ext) + sum(fu_ext);
 
-F_anal = rho * g * H * L;
+F_anal = rho * g * H * L + m*g;
