@@ -137,9 +137,9 @@ vm_stress = zeros(3,nel);
 for iel = 1:nel
 
     % Mean stresses for three thickness points
-    sigma(:,iel,1) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(1),Ex(iel,:),Ey(iel,:));
-    sigma(:,iel,2) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(2),Ex(iel,:),Ey(iel,:));
-    sigma(:,iel,3) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(3),Ex(iel,:),Ey(iel,:));
+    [sigma(:,iel,1),~] = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(1),Ex(iel,:),Ey(iel,:));
+    [sigma(:,iel,2),~] = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(2),Ex(iel,:),Ey(iel,:));
+    [sigma(:,iel,3),~] = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(3),Ex(iel,:),Ey(iel,:));
     
     % 
     vm_stress(1,iel) = VonMisesStress(sigma(:,iel,1));
