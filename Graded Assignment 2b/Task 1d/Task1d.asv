@@ -199,49 +199,8 @@ colorbar;
 set(gca,'YDir','reverse');
 set(gca,'XDir','reverse');
 
-%% Stress Distrubution
-% Initialize figures for each stress plot
+%% Stress Distrubution 
 figure(4);
 hold on;
-for i = 1:size(Ex, 1)
-    % Draw each element as a filled polygon with color based on the first stress point
-    fill(Ex(i, :), Ey(i, :), sigma(1, i, 1));
-end
-hold off;
-colorbar;
-title('Stress Distribution at z = t/2');
-xlabel('X-coordinate (m)');
-ylabel('Y-coordinate (m)');
-axis equal;
-set(gca, 'YDir', 'reverse');
-set(gca, 'XDir', 'reverse');
-
-figure(5);
-hold on;
-for i = 1:size(Ex, 1)
-    % Draw each element as a filled polygon with color based on the second stress point
-    fill(Ex(i, :), Ey(i, :), sigma(1, i, 2));
-end
-hold off;
-colorbar;
-title('Stress Distribution at z = 0');
-xlabel('X-coordinate (m)');
-ylabel('Y-coordinate (m)');
-axis equal;
-set(gca, 'YDir', 'reverse');
-set(gca, 'XDir', 'reverse');
-
-figure(6);
-hold on;
-for i = 1:size(Ex, 1)
-    % Draw each element as a filled polygon with color based on the third stress point
-    fill(Ex(i, :), Ey(i, :), sigma(1, i, 3));
-end
-hold off;
-colorbar;
-title('Stress Distribution at z = -t/2');
-xlabel('X-coordinate (m)');
-ylabel('Y-coordinate (m)');
-axis equal;
-set(gca, 'YDir', 'reverse');
-set(gca, 'XDir', 'reverse');
+ed_w=extract_dofs(Edof_oop,aw);
+fill3(Ex', Ey', ed_w(:,1:3:end)',ed_w(:,1:3:end)');
