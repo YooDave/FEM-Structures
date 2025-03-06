@@ -1,9 +1,9 @@
 % Task 1b test case
 clc 
 clear all 
-t = 50e-3;
-E = 80e9;
-nu = 0.2;
+t = 10e-3;
+E = 210e9;
+nu = 0.3;
 G_modulus = E/(2*(1+nu));
 G = G_modulus*eye(2,2);
 ptype = 1;
