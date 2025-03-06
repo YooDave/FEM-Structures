@@ -94,3 +94,4 @@ end
 F_nodal_total = sum(fw_ext) + sum(fu_ext);
 
 F_anal = rho * g * H * L + m*g;
+

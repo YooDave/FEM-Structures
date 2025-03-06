@@ -111,9 +111,6 @@ for iel = 1:nel
     Kww(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) = Kww(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) + Keww;
     Kuu(Edof_ip(iel,2:end),Edof_ip(iel,2:end)) = Kuu(Edof_ip(iel,2:end),Edof_ip(iel,2:end)) + Keuu;
 
-    % [Kww,fw_ext]=assem(Edof_oop,Kww,Keww,fw_ext,few_ext);
-    % Kuu =assem(Edof_ip,Kuu,Keuu);
-
 end
 %---------------------------------------------------------
 %---------------------------------------------------------
