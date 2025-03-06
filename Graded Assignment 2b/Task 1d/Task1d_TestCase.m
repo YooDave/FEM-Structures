@@ -23,4 +23,4 @@ aw = (9:20)*1E-6;
 sigma = zeros(3,1);
 
 % Calculating mean stress over Gauss points
-sigma = Stress(D,au.',aw.',z,Ex,Ey);
+[sigma,sigma_matrix] = Stress(D,au.',aw.',z,Ex,Ey);

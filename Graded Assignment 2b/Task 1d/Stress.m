@@ -1,4 +1,4 @@
-function sigma = Stress(D,au,aw,z,Ex,Ey)
+function [sigma,sigma_matrix] = Stress(D,au,aw,z,Ex,Ey)
 
 xi_v = [-1/sqrt(3) -1/sqrt(3) 1/sqrt(3) 1/sqrt(3);
     -1/sqrt(3) 1/sqrt(3) -1/sqrt(3) 1/sqrt(3)];
