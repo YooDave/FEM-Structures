@@ -1,4 +1,4 @@
-%% Task 2c - Solving FE problem
+%% Task 1c - Solving FE problem
 clc 
 clear all 
 %---------------------------------------------------------
@@ -14,8 +14,6 @@ H=2; % Height of pool
 l=1; % Width of big mac's platform 
 m = 150; % Big mac in kg
 
-z = [t/2 , 0, -t/2];
-
 Dbar=D*t^3/12; % Dbar matrix
 
 
@@ -23,8 +21,8 @@ Dbar=D*t^3/12; % Dbar matrix
 xmin = 0; xmax = L; % Plate length in meters
 ymin = 0; ymax = H; % Plate height in meters
 
-nelx = 30; % Number of elements along x-direction
-nely = 30;  % Number of elements along y-direction
+nelx = 20; % Number of elements along x-direction
+nely = 20;  % Number of elements along y-direction
 nel = nelx*nely; % Total number of elements
 
 % Calling rectMesh function
@@ -102,15 +100,12 @@ for iel = 1:nel
 
     p = rho*g*y_avg;
     
-    [Keww, few_ext,Keuu,Bu] = StressKirchhoffQuad(Ex(iel,:),Ey(iel,:),Dbar,p,t,D);
+    [Keww, few_ext,Keuu] = KirchhoffQuad1c(Ex(iel,:),Ey(iel,:),Dbar,p,t,D);
 
     fw_ext(Edof_oop(iel,2:end)) = fw_ext(Edof_oop(iel,2:end)) + few_ext;
 
     Kww(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) = Kww(Edof_oop(iel,2:end),Edof_oop(iel,2:end)) + Keww;
     Kuu(Edof_ip(iel,2:end),Edof_ip(iel,2:end)) = Kuu(Edof_ip(iel,2:end),Edof_ip(iel,2:end)) + Keuu;
-
-    % [Kww,fw_ext]=assem(Edof_oop,Kww,Keww,fw_ext,few_ext);
-    % Kuu =assem(Edof_ip,Kuu,Keuu);
 
 end
 %---------------------------------------------------------
@@ -131,52 +126,17 @@ fu_extC = Kuu(dofu_C, dofu_F)*a_F + Kuu(dofu_C, dofu_C)*au(dofu_C) - fu_ext(dofu
 % Displacement for in plane problem
 au(dofu_F) = a_F;
 
-sigma = zeros(3,nel,3);
-vm_stress = zeros(3,nel);
+% Plotting for in plane displacement using CALFEM
+ed_u = extract_dofs(Edof_ip,au);
+sfac = 2E5;
+figure
+eldisp2(Ex,Ey,ed_u,[1 1 0],sfac);
+set(gca,'YDir','reverse');
+set(gca,'XDir','reverse');
+xlabel('x-coordinate [m]');
+ylabel('y-coordinate [m]');
 
-for iel = 1:nel
 
-    % Mean stresses for three thickness points
-    sigma(:,iel,1) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(1),Ex(iel,:),Ey(iel,:));
-    sigma(:,iel,2) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(2),Ex(iel,:),Ey(iel,:));
-    sigma(:,iel,3) = Stress(D,au(Edof_ip(iel,2:end)),aw(Edof_oop(iel,2:end)),z(3),Ex(iel,:),Ey(iel,:));
-    
-    % 
-    vm_stress(1,iel) = VonMisesStress(sigma(:,iel,1));
-    vm_stress(2,iel) = VonMisesStress(sigma(:,iel,2));
-    vm_stress(3,iel) = VonMisesStress(sigma(:,iel,1));
-end
-
-%% VON MISES Stress Distrubution
-% Loop through each thickness point and create plot
-for i = 1:3
-    figure; % Create a new figure for each thickness level
-    hold on;
-    
-    % Use fill to plot von Mises stress distribution
-    fill(Ex', Ey', vm_stress(i, :)', 'EdgeColor', 'none'); 
-    
-    colorbar; % Add colorbar for stress values
-    title(sprintf('Von Mises Stress at z = %.3f', z(i)));
-    
-    % Set axis properties for symmetry
-    axis equal; 
-    set(gca, 'YDir', 'reverse'); % Ensure correct orientation
-    set(gca, 'XDir', 'reverse'); % Flip X-direction for symmetry
-    xlabel('x-coordinate [m]');
-    ylabel('y-coordinate [m]');
-    
-    hold off;
-end
-
-% Loop through each thickness point and create plot
-
-for i = 1:3
-    [max_vm_stress(i), max_indices(i)] = max(vm_stress(i, :));
-end
-
-% Display the maximum values and their indices
-disp('Maximum von Mises stresses at z=t/2 , z=0 and z=-t/2 respectively:');
-disp(max_vm_stress');
-disp('Position of maximum von Mises stresses (node):');
-disp(max_indices');
+% Plotting of oop displacement using the fill command
+ed_w = extract_dofs(Edof_oop,aw);
+f
