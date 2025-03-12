@@ -1,0 +1,114 @@
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models['Model-1'].Material(name='Material-1')
+mdb.models['Model-1'].materials['Material-1'].Elastic(table=((16000.0, 0.33), 
+    ))
+mdb.models['Model-1'].materials['Material-1'].elastic.FailStress(table=((165.0, 
+    225.0, 165.0, 225.0, 62.0, 0.0, 0.0), ))
+mdb.models['Model-1'].HomogeneousShellSection(idealization=NO_IDEALIZATION, 
+    integrationRule=SIMPSON, material='Material-1', name='Section-1', 
+    nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, 
+    preIntegrate=OFF, temperature=GRADIENT, thickness=30.0, thicknessField='', 
+    thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
+mdb.models['Model-1'].parts['chair'].SectionAssignment(offset=0.0, offsetField=
+    '', offsetType=MIDDLE_SURFACE, region=Region(
+    faces=mdb.models['Model-1'].parts['chair'].faces.getSequenceFromMask(mask=(
+    '[#3ff ]', ), )), sectionName='Section-1', thicknessAssignment=
+    FROM_SECTION)
+mdb.models['Model-1'].rootAssembly.Instance(dependent=ON, name='chair-1', part=
+    mdb.models['Model-1'].parts['chair'])
+mdb.models['Model-1'].BuckleStep(blockSize=DEFAULT, eigensolver=LANCZOS, 
+    maxBlocks=DEFAULT, minEigen=None, name='Step-1', numEigen=5, previous=
+    'Initial')
+mdb.models['Model-1'].StaticStep(name='Step-2', previous='Step-1')
+mdb.models['Model-1'].steps['Step-2'].suppress()
+mdb.models['Model-1'].rootAssembly.Surface(name='bottom', side1Faces=
+    mdb.models['Model-1'].rootAssembly.instances['chair-1'].faces.getSequenceFromMask(
+    ('[#200 ]', ), ))
+mdb.models['Model-1'].Pressure(createStepName='Step-1', distributionType=
+    UNIFORM, field='', magnitude=1.62, name='Load-1', region=
+    mdb.models['Model-1'].rootAssembly.surfaces['bottom'])
+mdb.models['Model-1'].rootAssembly.Set(edges=
+    mdb.models['Model-1'].rootAssembly.instances['chair-1'].edges.getSequenceFromMask(
+    ('[#900 ]', ), ), name='BCS')
+mdb.models['Model-1'].EncastreBC(buckleCase=PERTURBATION_AND_BUCKLING, 
+    createStepName='Step-1', localCsys=None, name='BC-1', region=
+    mdb.models['Model-1'].rootAssembly.sets['BCS'])
+mdb.models['Model-1'].parts['chair'].setElementType(elemTypes=(ElemType(
+    elemCode=S4R, elemLibrary=STANDARD, secondOrderAccuracy=OFF), ElemType(
+    elemCode=S3, elemLibrary=STANDARD)), regions=(
+    mdb.models['Model-1'].parts['chair'].faces.getSequenceFromMask(('[#3ff ]', 
+    ), ), ))
+mdb.models['Model-1'].parts['chair'].setMeshControls(elemShape=QUAD, regions=
+    mdb.models['Model-1'].parts['chair'].faces.getSequenceFromMask(('[#3ff ]', 
+    ), ))
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.Job(atTime=None, contactPrint=OFF, description='', echoPrint=OFF, 
+    explicitPrecision=SINGLE, getMemoryFromAnalysis=True, historyPrint=OFF, 
+    memory=90, memoryUnits=PERCENTAGE, model='Model-1', modelPrint=OFF, 
+    multiprocessingMode=DEFAULT, name='Stepone', nodalOutputPrecision=SINGLE, 
+    numCpus=1, numGPUs=0, numThreadsPerMpiProcess=1, queue=None, resultsFormat=
+    ODB, scratch='', type=ANALYSIS, userSubroutine='', waitHours=0, 
+    waitMinutes=0)
+mdb.jobs['Stepone'].submit(consistencyChecking=OFF)
+mdb.jobs['Stepone']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'Stepone', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['Stepone']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\Stepone.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'Stepone', 'clientHost': 'ED-REMOTE-004', 'handle': 10012})
+mdb.jobs['Stepone']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(MEMORY_ESTIMATE, {'memory': 79.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(MINIMUM_MEMORY, {'minimum_memory': 25.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 13:55:12 2025', 'jobName': 'Stepone'})
+# Save by brijeshn on 2025_03_12-13.55.29; build 2024 2023_09_21-14.55.25 RELr426 190762

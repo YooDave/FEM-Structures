@@ -1,0 +1,2483 @@
+# -*- coding: mbcs -*-
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models['Model-1'].Material(name='Material-1')
+mdb.models['Model-1'].materials['Material-1'].Elastic(table=((16000.0, 0.33), 
+    ))
+mdb.models['Model-1'].materials['Material-1'].elastic.FailStress(table=((165.0, 
+    225.0, 165.0, 225.0, 62.0, 0.0, 0.0), ))
+mdb.models['Model-1'].HomogeneousShellSection(idealization=NO_IDEALIZATION, 
+    integrationRule=SIMPSON, material='Material-1', name='Section-1', 
+    nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, 
+    preIntegrate=OFF, temperature=GRADIENT, thickness=30.0, thicknessField='', 
+    thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
+mdb.models['Model-1'].parts['chair'].SectionAssignment(offset=0.0, offsetField=
+    '', offsetType=MIDDLE_SURFACE, region=Region(
+    faces=mdb.models['Model-1'].parts['chair'].faces.getSequenceFromMask(mask=(
+    '[#3ff ]', ), )), sectionName='Section-1', thicknessAssignment=
+    FROM_SECTION)
+mdb.models['Model-1'].rootAssembly.Instance(dependent=ON, name='chair-1', part=
+    mdb.models['Model-1'].parts['chair'])
+mdb.models['Model-1'].BuckleStep(blockSize=DEFAULT, eigensolver=LANCZOS, 
+    maxBlocks=DEFAULT, minEigen=None, name='Step-1', numEigen=5, previous=
+    'Initial')
+mdb.models['Model-1'].StaticStep(name='Step-2', previous='Step-1')
+mdb.models['Model-1'].steps['Step-2'].suppress()
+mdb.models['Model-1'].rootAssembly.Surface(name='bottom', side1Faces=
+    mdb.models['Model-1'].rootAssembly.instances['chair-1'].faces.getSequenceFromMask(
+    ('[#200 ]', ), ))
+mdb.models['Model-1'].Pressure(createStepName='Step-1', distributionType=
+    UNIFORM, field='', magnitude=1.62, name='Load-1', region=
+    mdb.models['Model-1'].rootAssembly.surfaces['bottom'])
+mdb.models['Model-1'].rootAssembly.Set(edges=
+    mdb.models['Model-1'].rootAssembly.instances['chair-1'].edges.getSequenceFromMask(
+    ('[#900 ]', ), ), name='BCS')
+mdb.models['Model-1'].EncastreBC(buckleCase=PERTURBATION_AND_BUCKLING, 
+    createStepName='Step-1', localCsys=None, name='BC-1', region=
+    mdb.models['Model-1'].rootAssembly.sets['BCS'])
+mdb.models['Model-1'].parts['chair'].setElementType(elemTypes=(ElemType(
+    elemCode=S4R, elemLibrary=STANDARD, secondOrderAccuracy=OFF), ElemType(
+    elemCode=S3, elemLibrary=STANDARD)), regions=(
+    mdb.models['Model-1'].parts['chair'].faces.getSequenceFromMask(('[#3ff ]', 
+    ), ), ))
+mdb.models['Model-1'].parts['chair'].setMeshControls(elemShape=QUAD, regions=
+    mdb.models['Model-1'].parts['chair'].faces.getSequenceFromMask(('[#3ff ]', 
+    ), ))
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.Job(atTime=None, contactPrint=OFF, description='', echoPrint=OFF, 
+    explicitPrecision=SINGLE, getMemoryFromAnalysis=True, historyPrint=OFF, 
+    memory=90, memoryUnits=PERCENTAGE, model='Model-1', modelPrint=OFF, 
+    multiprocessingMode=DEFAULT, name='Stepone', nodalOutputPrecision=SINGLE, 
+    numCpus=1, numGPUs=0, numThreadsPerMpiProcess=1, queue=None, resultsFormat=
+    ODB, scratch='', type=ANALYSIS, userSubroutine='', waitHours=0, 
+    waitMinutes=0)
+mdb.jobs['Stepone'].submit(consistencyChecking=OFF)
+mdb.jobs['Stepone']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'Stepone', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['Stepone']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\Stepone.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'Stepone', 'clientHost': 'ED-REMOTE-004', 'handle': 10012})
+mdb.jobs['Stepone']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(MEMORY_ESTIMATE, {'memory': 79.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(MINIMUM_MEMORY, {'minimum_memory': 25.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'Stepone'})
+mdb.jobs['Stepone']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 13:55:12 2025', 'jobName': 'Stepone'})
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models['Model-1'].steps['Step-2'].resume()
+mdb.models['Model-1'].Pressure(createStepName='Step-1', distributionType=
+    UNIFORM, field='', magnitude=1.62, name='Load-2', region=
+    mdb.models['Model-1'].rootAssembly.surfaces['bottom'])
+del mdb.models['Model-1'].loads['Load-2']
+mdb.models['Model-1'].Pressure(amplitude=UNSET, createStepName='Step-2', 
+    distributionType=UNIFORM, field='', magnitude=1.62, name='Load-2', region=
+    mdb.models['Model-1'].rootAssembly.surfaces['bottom'])
+mdb.models['Model-1'].steps['Step-1'].suppress()
+mdb.models['Model-1'].EncastreBC(createStepName='Step-2', localCsys=None, name=
+    'BC-2', region=mdb.models['Model-1'].rootAssembly.sets['BCS'])
+mdb.Job(atTime=None, contactPrint=OFF, description='', echoPrint=OFF, 
+    explicitPrecision=SINGLE, getMemoryFromAnalysis=True, historyPrint=OFF, 
+    memory=90, memoryUnits=PERCENTAGE, model='Model-1', modelPrint=OFF, 
+    multiprocessingMode=DEFAULT, name='steptwo', nodalOutputPrecision=SINGLE, 
+    numCpus=1, numGPUs=0, numThreadsPerMpiProcess=1, queue=None, resultsFormat=
+    ODB, scratch='', type=ANALYSIS, userSubroutine='', waitHours=0, 
+    waitMinutes=0)
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 17572})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 43.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 21.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 13:57:56 2025', 'jobName': 'steptwo'})
+# Save by brijeshn on 2025_03_12-13.59.20; build 2024 2023_09_21-14.55.25 RELr426 190762
+# Save by brijeshn on 2025_03_12-13.59.23; build 2024 2023_09_21-14.55.25 RELr426 190762
+# Save by brijeshn on 2025_03_12-13.59.24; build 2024 2023_09_21-14.55.25 RELr426 190762
+# Save by brijeshn on 2025_03_12-13.59.24; build 2024 2023_09_21-14.55.25 RELr426 190762
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models['Model-1'].parts['chair'].setElementType(elemTypes=(ElemType(
+    elemCode=S8R, elemLibrary=STANDARD), ElemType(elemCode=STRI65, 
+    elemLibrary=STANDARD)), regions=(
+    mdb.models['Model-1'].parts['chair'].faces.getSequenceFromMask(('[#3ff ]', 
+    ), ), ))
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.Job(atTime=None, contactPrint=OFF, description='', echoPrint=OFF, 
+    explicitPrecision=SINGLE, getMemoryFromAnalysis=True, historyPrint=OFF, 
+    memory=90, memoryUnits=PERCENTAGE, model='Model-1', modelPrint=OFF, 
+    multiprocessingMode=DEFAULT, name='QUADsteptwo', nodalOutputPrecision=
+    SINGLE, numCpus=1, numGPUs=0, numThreadsPerMpiProcess=1, queue=None, 
+    resultsFormat=ODB, scratch='', type=ANALYSIS, userSubroutine='', waitHours=
+    0, waitMinutes=0)
+mdb.jobs['QUADsteptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['QUADsteptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'QUADsteptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': '160 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\QUADsteptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(COMPLETED, {
+    'message': 'Analysis phase complete', 'phase': BATCHPRE_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 12032})
+mdb.jobs['QUADsteptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(MEMORY_ESTIMATE, {'memory': 106.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 24.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(STATUS, {'step': 1, 'increment': 1, 
+    'attempts': 1, 'severe': 0, 'equilibrium': 1, 'iterations': 1, 
+    'totalTime': 1.0, 'stepTime': 1.0, 'timeIncrement': 1.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(END_STEP, {'stepId': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(COMPLETED, {
+    'message': 'Analysis phase complete', 'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 14:01:23 2025', 'jobName': 'QUADsteptwo'})
+mdb.models['Model-1'].steps['Step-2'].suppress()
+mdb.models['Model-1'].steps['Step-1'].resume()
+mdb.Job(atTime=None, contactPrint=OFF, description='', echoPrint=OFF, 
+    explicitPrecision=SINGLE, getMemoryFromAnalysis=True, historyPrint=OFF, 
+    memory=90, memoryUnits=PERCENTAGE, model='Model-1', modelPrint=OFF, 
+    multiprocessingMode=DEFAULT, name='Quadstep1', nodalOutputPrecision=SINGLE, 
+    numCpus=1, numGPUs=0, numThreadsPerMpiProcess=1, queue=None, resultsFormat=
+    ODB, scratch='', type=ANALYSIS, userSubroutine='', waitHours=0, 
+    waitMinutes=0)
+mdb.jobs['Quadstep1'].submit(consistencyChecking=OFF)
+mdb.jobs['Quadstep1']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'Quadstep1', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['Quadstep1']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(WARNING, {
+    'message': '160 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\Quadstep1.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(COMPLETED, {
+    'message': 'Analysis phase complete', 'phase': BATCHPRE_PHASE, 
+    'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'Quadstep1', 'clientHost': 'ED-REMOTE-004', 'handle': 10184})
+mdb.jobs['Quadstep1']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(MEMORY_ESTIMATE, {'memory': 222.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(MINIMUM_MEMORY, {'minimum_memory': 29.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(WARNING, {
+    'message': 'THERE ARE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(STATUS, {'step': 1, 'increment': 1, 
+    'attempts': 1, 'severe': 0, 'equilibrium': 0, 'iterations': 0, 
+    'totalTime': 0.0, 'stepTime': 1e-36, 'timeIncrement': 1e-36, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(COMPLETED, {
+    'message': 'Analysis phase complete', 'phase': STANDARD_PHASE, 
+    'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 14:02:42 2025', 'jobName': 'Quadstep1'})
+mdb.models['Model-1'].sections['Section-1'].setValues(idealization=
+    NO_IDEALIZATION, integrationRule=SIMPSON, material='Material-1', 
+    nodalThicknessField='', numIntPts=5, preIntegrate=OFF, thickness=25.0, 
+    thicknessField='', thicknessType=UNIFORM)
+mdb.jobs['Quadstep1'].submit(consistencyChecking=OFF)
+mdb.jobs['Quadstep1']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'Quadstep1', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['Quadstep1']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(WARNING, {
+    'message': '160 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\Quadstep1.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(COMPLETED, {
+    'message': 'Analysis phase complete', 'phase': BATCHPRE_PHASE, 
+    'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'Quadstep1', 'clientHost': 'ED-REMOTE-004', 'handle': 9940})
+mdb.jobs['Quadstep1']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(MEMORY_ESTIMATE, {'memory': 222.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(MINIMUM_MEMORY, {'minimum_memory': 29.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(WARNING, {
+    'message': 'THERE ARE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(STATUS, {'step': 1, 'increment': 1, 
+    'attempts': 1, 'severe': 0, 'equilibrium': 0, 'iterations': 0, 
+    'totalTime': 0.0, 'stepTime': 1e-36, 'timeIncrement': 1e-36, 
+    'phase': STANDARD_PHASE, 'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(COMPLETED, {
+    'message': 'Analysis phase complete', 'phase': STANDARD_PHASE, 
+    'jobName': 'Quadstep1'})
+mdb.jobs['Quadstep1']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 14:05:46 2025', 'jobName': 'Quadstep1'})
+mdb.models['Model-1'].steps['Step-2'].resume()
+mdb.models['Model-1'].steps['Step-1'].suppress()
+mdb.jobs['QUADsteptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['QUADsteptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'QUADsteptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': '160 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\QUADsteptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(COMPLETED, {
+    'message': 'Analysis phase complete', 'phase': BATCHPRE_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 1088})
+mdb.jobs['QUADsteptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(MEMORY_ESTIMATE, {'memory': 106.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 24.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(STATUS, {'step': 1, 'increment': 1, 
+    'attempts': 1, 'severe': 0, 'equilibrium': 1, 'iterations': 1, 
+    'totalTime': 1.0, 'stepTime': 1.0, 'timeIncrement': 1.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(END_STEP, {'stepId': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(COMPLETED, {
+    'message': 'Analysis phase complete', 'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 14:06:28 2025', 'jobName': 'QUADsteptwo'})
+mdb.models['Model-1'].sections['Section-1'].setValues(idealization=
+    NO_IDEALIZATION, integrationRule=SIMPSON, material='Material-1', 
+    nodalThicknessField='', numIntPts=5, preIntegrate=OFF, thickness=35.0, 
+    thicknessField='', thicknessType=UNIFORM)
+mdb.jobs['QUADsteptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['QUADsteptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'QUADsteptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': '160 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\QUADsteptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(COMPLETED, {
+    'message': 'Analysis phase complete', 'phase': BATCHPRE_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 3480})
+mdb.jobs['QUADsteptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(MEMORY_ESTIMATE, {'memory': 106.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 24.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(STATUS, {'step': 1, 'increment': 1, 
+    'attempts': 1, 'severe': 0, 'equilibrium': 1, 'iterations': 1, 
+    'totalTime': 1.0, 'stepTime': 1.0, 'timeIncrement': 1.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(END_STEP, {'stepId': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(COMPLETED, {
+    'message': 'Analysis phase complete', 'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 14:07:22 2025', 'jobName': 'QUADsteptwo'})
+mdb.models['Model-1'].sections['Section-1'].setValues(idealization=
+    NO_IDEALIZATION, integrationRule=SIMPSON, material='Material-1', 
+    nodalThicknessField='', numIntPts=5, preIntegrate=OFF, thickness=40.0, 
+    thicknessField='', thicknessType=UNIFORM)
+mdb.jobs['QUADsteptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['QUADsteptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'QUADsteptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': '160 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\QUADsteptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(COMPLETED, {
+    'message': 'Analysis phase complete', 'phase': BATCHPRE_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 10300})
+mdb.jobs['QUADsteptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(MEMORY_ESTIMATE, {'memory': 106.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 24.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(STATUS, {'step': 1, 'increment': 1, 
+    'attempts': 1, 'severe': 0, 'equilibrium': 1, 'iterations': 1, 
+    'totalTime': 1.0, 'stepTime': 1.0, 'timeIncrement': 1.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(END_STEP, {'stepId': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(COMPLETED, {
+    'message': 'Analysis phase complete', 'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 14:08:24 2025', 'jobName': 'QUADsteptwo'})
+mdb.models['Model-1'].sections['Section-1'].setValues(idealization=
+    NO_IDEALIZATION, integrationRule=SIMPSON, material='Material-1', 
+    nodalThicknessField='', numIntPts=5, preIntegrate=OFF, thickness=45.0, 
+    thicknessField='', thicknessType=UNIFORM)
+mdb.jobs['QUADsteptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['QUADsteptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'QUADsteptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': '160 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\QUADsteptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(COMPLETED, {
+    'message': 'Analysis phase complete', 'phase': BATCHPRE_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 17896})
+mdb.jobs['QUADsteptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(MEMORY_ESTIMATE, {'memory': 106.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 24.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(STATUS, {'step': 1, 'increment': 1, 
+    'attempts': 1, 'severe': 0, 'equilibrium': 1, 'iterations': 1, 
+    'totalTime': 1.0, 'stepTime': 1.0, 'timeIncrement': 1.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(END_STEP, {'stepId': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(COMPLETED, {
+    'message': 'Analysis phase complete', 'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 14:09:22 2025', 'jobName': 'QUADsteptwo'})
+mdb.models['Model-1'].sections['Section-1'].setValues(idealization=
+    NO_IDEALIZATION, integrationRule=SIMPSON, material='Material-1', 
+    nodalThicknessField='', numIntPts=5, preIntegrate=OFF, thickness=30.0, 
+    thicknessField='', thicknessType=UNIFORM)
+mdb.jobs['QUADsteptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['QUADsteptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'QUADsteptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(WARNING, {
+    'message': '160 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\QUADsteptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(COMPLETED, {
+    'message': 'Analysis phase complete', 'phase': BATCHPRE_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 16276})
+mdb.jobs['QUADsteptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(MEMORY_ESTIMATE, {'memory': 106.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 24.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(STATUS, {'step': 1, 'increment': 1, 
+    'attempts': 1, 'severe': 0, 'equilibrium': 1, 'iterations': 1, 
+    'totalTime': 1.0, 'stepTime': 1.0, 'timeIncrement': 1.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(END_STEP, {'stepId': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(COMPLETED, {
+    'message': 'Analysis phase complete', 'phase': STANDARD_PHASE, 
+    'jobName': 'QUADsteptwo'})
+mdb.jobs['QUADsteptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 14:15:34 2025', 'jobName': 'QUADsteptwo'})
+mdb.models['Model-1'].loads['Load-1'].resume()
+#* Cannot resume while the step is still suppressed.  Resume the step first.
+mdb.models['Model-1'].steps['Step-1'].resume()
+mdb.models['Model-1'].steps['Step-1'].setValues(minEigen=0.0)
+mdb.models['Model-1'].loads['Load-1'].setValues(magnitude=0.0103051948406655)
+mdb.models['Model-1'].loads['Load-2'].setValues(magnitude=0.0103051948406655)
+mdb.models['Model-1'].parts['chair'].setElementType(elemTypes=(ElemType(
+    elemCode=S4R, elemLibrary=STANDARD, secondOrderAccuracy=OFF, 
+    hourglassControl=DEFAULT), ElemType(elemCode=S3, elemLibrary=STANDARD)), 
+    regions=(mdb.models['Model-1'].parts['chair'].faces.getSequenceFromMask((
+    '[#3ff ]', ), ), ))
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.models['Model-1'].sections['Section-1'].setValues(idealization=
+    NO_IDEALIZATION, integrationRule=SIMPSON, material='Material-1', 
+    nodalThicknessField='', numIntPts=5, preIntegrate=OFF, thickness=6.0, 
+    thicknessField='', thicknessType=UNIFORM)
+mdb.models['Model-1'].parts['chair'].setElementType(elemTypes=(ElemType(
+    elemCode=S8R, elemLibrary=STANDARD), ElemType(elemCode=STRI65, 
+    elemLibrary=STANDARD)), regions=(
+    mdb.models['Model-1'].parts['chair'].faces.getSequenceFromMask(('[#3ff ]', 
+    ), ), ))
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': '160 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 14120})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 240.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 34.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 114.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 24.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 14:30:45 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].boundaryConditions['BC-1'].suppress()
+mdb.models['Model-1'].boundaryConditions['BC-2'].suppress()
+mdb.models['Model-1'].rootAssembly.Set(name='Set-2', vertices=
+    mdb.models['Model-1'].rootAssembly.instances['chair-1'].vertices.getSequenceFromMask(
+    ('[#280 ]', ), ))
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-2', 
+    distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=None, name=
+    'BC-3', region=mdb.models['Model-1'].rootAssembly.sets['Set-2'], u1=UNSET, 
+    u2=UNSET, u3=0.0, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.models['Model-1'].rootAssembly.Set(edges=
+    mdb.models['Model-1'].rootAssembly.instances['chair-1'].edges.getSequenceFromMask(
+    ('[#900 ]', ), ), name='Set-3')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-2', 
+    distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=None, name=
+    'BC-4', region=mdb.models['Model-1'].rootAssembly.sets['Set-3'], u1=UNSET, 
+    u2=0.0, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.models['Model-1'].rootAssembly.Set(edges=
+    mdb.models['Model-1'].rootAssembly.instances['chair-1'].edges.getSequenceFromMask(
+    ('[#100 ]', ), ), name='Set-4')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Step-2', 
+    distributionType=UNIFORM, fieldName='', fixed=OFF, localCsys=None, name=
+    'BC-5', region=mdb.models['Model-1'].rootAssembly.sets['Set-4'], u1=0.0, 
+    u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+del mdb.models['Model-1'].boundaryConditions['BC-3']
+del mdb.models['Model-1'].boundaryConditions['BC-4']
+del mdb.models['Model-1'].boundaryConditions['BC-5']
+mdb.models['Model-1'].rootAssembly.Set(name='Set-5', vertices=
+    mdb.models['Model-1'].rootAssembly.instances['chair-1'].vertices.getSequenceFromMask(
+    ('[#280 ]', ), ))
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Initial', 
+    distributionType=UNIFORM, fieldName='', localCsys=None, name='BC-3', 
+    region=mdb.models['Model-1'].rootAssembly.sets['Set-5'], u1=UNSET, u2=UNSET
+    , u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.models['Model-1'].rootAssembly.Set(edges=
+    mdb.models['Model-1'].rootAssembly.instances['chair-1'].edges.getSequenceFromMask(
+    ('[#900 ]', ), ), name='Set-6')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Initial', 
+    distributionType=UNIFORM, fieldName='', localCsys=None, name='BC-4', 
+    region=mdb.models['Model-1'].rootAssembly.sets['Set-6'], u1=UNSET, u2=SET, 
+    u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.models['Model-1'].rootAssembly.Set(edges=
+    mdb.models['Model-1'].rootAssembly.instances['chair-1'].edges.getSequenceFromMask(
+    ('[#100 ]', ), ), name='Set-7')
+mdb.models['Model-1'].DisplacementBC(amplitude=UNSET, createStepName='Initial', 
+    distributionType=UNIFORM, fieldName='', localCsys=None, name='BC-5', 
+    region=mdb.models['Model-1'].rootAssembly.sets['Set-7'], u1=SET, u2=UNSET, 
+    u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET)
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': '160 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 12680})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 240.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 34.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 114.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 24.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 14:50:54 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=20.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].parts['chair'].setElementType(elemTypes=(ElemType(
+    elemCode=S8R, elemLibrary=STANDARD), ElemType(elemCode=STRI65, 
+    elemLibrary=STANDARD)), regions=(
+    mdb.models['Model-1'].parts['chair'].faces.getSequenceFromMask(('[#3ff ]', 
+    ), ), ))
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': '200 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 14308})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 359.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 43.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE ARE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 170.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 34.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 14:54:52 2025', 'jobName': 'steptwo'})
+# Save by brijeshn on 2025_03_12-15.02.48; build 2024 2023_09_21-14.55.25 RELr426 190762
+# Save by brijeshn on 2025_03_12-15.02.49; build 2024 2023_09_21-14.55.25 RELr426 190762
+# Save by brijeshn on 2025_03_12-15.02.49; build 2024 2023_09_21-14.55.25 RELr426 190762
+# Save by brijeshn on 2025_03_12-15.02.53; build 2024 2023_09_21-14.55.25 RELr426 190762
+# Save by brijeshn on 2025_03_12-15.02.53; build 2024 2023_09_21-14.55.25 RELr426 190762
+# Save by brijeshn on 2025_03_12-15.04.09; build 2024 2023_09_21-14.55.25 RELr426 190762
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.models['Model-1'].parts['chair'].setElementType(elemTypes=(ElemType(
+    elemCode=S4R, elemLibrary=STANDARD, secondOrderAccuracy=OFF, 
+    hourglassControl=DEFAULT), ElemType(elemCode=S3, elemLibrary=STANDARD)), 
+    regions=(mdb.models['Model-1'].parts['chair'].faces.getSequenceFromMask((
+    '[#3ff ]', ), ), ))
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 9292})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 121.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 30.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE ARE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 56.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 21.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 15:49:51 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=25.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 17936})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 88.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 29.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 44.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 21.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 15:52:49 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=50.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 11348})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 43.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 23.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE ARE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 27.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 17.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 15:53:38 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=100.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 16640})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 33.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 23.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE ARE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 25.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 17.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 15:54:47 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=200.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 15188})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 31.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 23.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE ARE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 24.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 17.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 15:56:30 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=50.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 14720})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 43.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 23.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE ARE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 27.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 17.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 15:57:26 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=25.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 10072})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 88.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 29.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 44.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 21.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 15:59:57 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=15.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 12592})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 194.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 33.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 87.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 24.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 16:00:54 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=10.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 18160})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 415.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 41.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 179.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 35.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 16:01:45 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=5.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 21268})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 1676.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 132.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 742.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 120.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 16:03:31 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].setElementType(elemTypes=(ElemType(
+    elemCode=S8R, elemLibrary=STANDARD), ElemType(elemCode=STRI65, 
+    elemLibrary=STANDARD)), regions=(
+    mdb.models['Model-1'].parts['chair'].faces.getSequenceFromMask(('[#3ff ]', 
+    ), ), ))
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=10.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': '100 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 18932})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 1406.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 135.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 684.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 118.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 16:06:37 2025', 'jobName': 'steptwo'})
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': '100 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 18408})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 1406.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 135.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 684.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 118.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 16:07:06 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=15.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': '330 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 22524})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 618.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 67.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE ARE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 295.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 55.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 16:09:03 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=20.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': '200 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 12732})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 359.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 43.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE ARE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 170.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 34.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 16:10:57 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=25.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': '160 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 5932})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 240.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 34.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 114.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 24.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 16:12:28 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=30.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': '102 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 20608})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 172.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 32.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE ARE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 84.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 22.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 16:13:17 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].setElementType(elemTypes=(ElemType(
+    elemCode=S4R, elemLibrary=STANDARD, secondOrderAccuracy=OFF, 
+    hourglassControl=DEFAULT), ElemType(elemCode=S3, elemLibrary=STANDARD)), 
+    regions=(mdb.models['Model-1'].parts['chair'].faces.getSequenceFromMask((
+    '[#3ff ]', ), ), ))
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=10.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].sections['Section-1'].setValues(idealization=
+    NO_IDEALIZATION, integrationRule=SIMPSON, material='Material-1', 
+    nodalThicknessField='', numIntPts=5, preIntegrate=OFF, thickness=7.0, 
+    thicknessField='', thicknessType=UNIFORM)
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 13648})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 415.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 41.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 179.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 35.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 16:48:11 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].sections['Section-1'].setValues(idealization=
+    NO_IDEALIZATION, integrationRule=SIMPSON, material='Material-1', 
+    nodalThicknessField='', numIntPts=5, preIntegrate=OFF, thickness=8.0, 
+    thicknessField='', thicknessType=UNIFORM)
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 14132})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 415.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 41.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 179.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 35.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 16:52:06 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].sections['Section-1'].setValues(idealization=
+    NO_IDEALIZATION, integrationRule=SIMPSON, material='Material-1', 
+    nodalThicknessField='', numIntPts=5, preIntegrate=OFF, thickness=10.0, 
+    thicknessField='', thicknessType=UNIFORM)
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 1304})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 415.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 41.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 179.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 35.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 16:55:58 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].parts['chair'].deleteMesh()
+mdb.models['Model-1'].parts['chair'].seedPart(deviationFactor=0.1, 
+    minSizeFactor=0.1, size=25.0)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].parts['chair'].setElementType(elemTypes=(ElemType(
+    elemCode=S8R, elemLibrary=STANDARD), ElemType(elemCode=STRI65, 
+    elemLibrary=STANDARD)), regions=(
+    mdb.models['Model-1'].parts['chair'].faces.getSequenceFromMask(('[#3ff ]', 
+    ), ), ))
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': '160 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 13160})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 240.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 34.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 114.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 24.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 17:00:14 2025', 'jobName': 'steptwo'})
+mdb.models['Model-1'].sections['Section-1'].setValues(idealization=
+    NO_IDEALIZATION, integrationRule=SIMPSON, material='Material-1', 
+    nodalThicknessField='', numIntPts=5, preIntegrate=OFF, thickness=8.0, 
+    thicknessField='', thicknessType=UNIFORM)
+mdb.models['Model-1'].parts['chair'].generateMesh()
+mdb.models['Model-1'].rootAssembly.regenerate()
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+mdb.jobs['steptwo']._Message(STARTED, {'phase': BATCHPRE_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 0})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'COMPRESSIVE FAILURE VALUES MUST BE NEGATIVE. NEGATIVE OF INPUT TAKEN.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'NO BIAXIAL STRESS LIMIT GIVEN.  DEFAULT F12 USED.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': '160 elements are curved/warped. The angle subtended between the average element normal and a nodal normal exceeds 10 degrees. Mesh refinement is recommended. The elements have been identified in element set WarnElemWarped.', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FILE, {
+    'file': 'C:\\Users\\brijeshn\\Documents\\GitHub\\FEM-Structures\\Computer Exercise 2\\steptwo.odb', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': BATCHPRE_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STARTED, {'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo', 'clientHost': 'ED-REMOTE-004', 'handle': 19536})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 240.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 34.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(WARNING, {
+    'message': 'THERE MAY BE MORE EIGENVALUES IN THE SPECIFIED RANGE THAN REQUESTED. IF THE NUMBER OF EIGENVALUES WAS NOT EXPLICITLY REQUESTED, SPECIFY THE MAXIMUM NUMBER OF EIGENVALUES TO BE EXTRACTED', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 2, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 3, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 4, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 0, 'frame': 5, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 1, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 0, 'iterations': 0, 'totalTime': 0.0, 
+    'stepTime': 1e-36, 'timeIncrement': 1e-36, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 1, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MEMORY_ESTIMATE, {'memory': 114.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(PHYSICAL_MEMORY, {'physical_memory': 32457.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(MINIMUM_MEMORY, {'minimum_memory': 24.0, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(ODB_FRAME, {'step': 1, 'frame': 1, 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(STATUS, {'step': 2, 'increment': 1, 'attempts': 1, 
+    'severe': 0, 'equilibrium': 1, 'iterations': 1, 'totalTime': 1.0, 
+    'stepTime': 1.0, 'timeIncrement': 1.0, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(END_STEP, {'stepId': 2, 'phase': STANDARD_PHASE, 
+    'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(COMPLETED, {'message': 'Analysis phase complete', 
+    'phase': STANDARD_PHASE, 'jobName': 'steptwo'})
+mdb.jobs['steptwo']._Message(JOB_COMPLETED, {
+    'time': 'Wed Mar 12 17:03:21 2025', 'jobName': 'steptwo'})
+# Save by brijeshn on 2025_03_12-17.11.53; build 2024 2023_09_21-14.55.25 RELr426 190762
+# Save by brijeshn on 2025_03_12-17.11.54; build 2024 2023_09_21-14.55.25 RELr426 190762
+# Save by brijeshn on 2025_03_12-17.11.55; build 2024 2023_09_21-14.55.25 RELr426 190762
+# Save by brijeshn on 2025_03_12-17.11.55; build 2024 2023_09_21-14.55.25 RELr426 190762
+# Save by brijeshn on 2025_03_12-17.13.12; build 2024 2023_09_21-14.55.25 RELr426 190762

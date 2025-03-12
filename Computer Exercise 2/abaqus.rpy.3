@@ -1,0 +1,1200 @@
+# -*- coding: mbcs -*-
+#
+# Abaqus/CAE Release 2024 replay file
+# Internal Version: 2023_09_21-14.55.25 RELr426 190762
+# Run by brijeshn on Wed Mar 12 13:51:25 2025
+#
+
+# from driverUtils import executeOnCaeGraphicsStartup
+# executeOnCaeGraphicsStartup()
+#: Executing "onCaeGraphicsStartup()" in the site directory ...
+from abaqus import *
+from abaqusConstants import *
+session.Viewport(name='Viewport: 1', origin=(0.0, 0.0), width=265.166656494141, 
+    height=176.486114501953)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].maximize()
+from caeModules import *
+from driverUtils import executeOnCaeStartup
+executeOnCaeStartup()
+openMdb('chairGeometry_bleh.cae')
+#: The model database "C:\Users\brijeshn\Documents\GitHub\FEM-Structures\Computer Exercise 2\chairGeometry_bleh.cae" has been opened.
+session.viewports['Viewport: 1'].setValues(displayedObject=None)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=ON)
+p = mdb.models['Model-1'].parts['chair']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=ON, 
+    engineeringFeatures=ON)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=OFF)
+mdb.models['Model-1'].Material(name='Material-1')
+mdb.models['Model-1'].materials['Material-1'].Elastic(table=((16000.0, 0.33), 
+    ))
+mdb.models['Model-1'].materials['Material-1'].elastic.FailStress(table=((165.0, 
+    225.0, 165.0, 225.0, 62.0, 0.0, 0.0), ))
+mdb.models['Model-1'].HomogeneousShellSection(name='Section-1', 
+    preIntegrate=OFF, material='Material-1', thicknessType=UNIFORM, 
+    thickness=30.0, thicknessField='', nodalThicknessField='', 
+    idealization=NO_IDEALIZATION, poissonDefinition=DEFAULT, 
+    thicknessModulus=None, temperature=GRADIENT, useDensity=OFF, 
+    integrationRule=SIMPSON, numIntPts=5)
+p = mdb.models['Model-1'].parts['chair']
+f = p.faces
+faces = f.getSequenceFromMask(mask=('[#3ff ]', ), )
+region = regionToolset.Region(faces=faces)
+p = mdb.models['Model-1'].parts['chair']
+p.SectionAssignment(region=region, sectionName='Section-1', offset=0.0, 
+    offsetType=MIDDLE_SURFACE, offsetField='', 
+    thicknessAssignment=FROM_SECTION)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    optimizationTasks=OFF, geometricRestrictions=OFF, stopConditions=OFF)
+a = mdb.models['Model-1'].rootAssembly
+p = mdb.models['Model-1'].parts['chair']
+a.Instance(name='chair-1', part=p, dependent=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].BuckleStep(name='Step-1', previous='Initial', numEigen=5, 
+    eigensolver=LANCZOS, minEigen=None, blockSize=DEFAULT, maxBlocks=DEFAULT)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Step-1')
+mdb.models['Model-1'].StaticStep(name='Step-2', previous='Step-1')
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Step-2')
+mdb.models['Model-1'].steps['Step-2'].suppress()
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Initial')
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON, adaptiveMeshConstraints=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Step-1')
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['chair-1'].faces
+side1Faces1 = s1.getSequenceFromMask(mask=('[#200 ]', ), )
+region = a.Surface(side1Faces=side1Faces1, name='bottom')
+mdb.models['Model-1'].Pressure(name='Load-1', createStepName='Step-1', 
+    region=region, distributionType=UNIFORM, field='', magnitude=1.62)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1684.62, 
+    farPlane=3365.3, width=1737.65, height=876.772, cameraPosition=(745.299, 
+    -1947.07, 101.601), cameraUpVector=(0.450341, 0.544575, 0.707553), 
+    cameraTarget=(210.724, 491.178, -247.38))
+a = mdb.models['Model-1'].rootAssembly
+e1 = a.instances['chair-1'].edges
+edges1 = e1.getSequenceFromMask(mask=('[#900 ]', ), )
+region = a.Set(edges=edges1, name='BCS')
+mdb.models['Model-1'].EncastreBC(name='BC-1', createStepName='Step-1', 
+    region=region, localCsys=None, buckleCase=PERTURBATION_AND_BUCKLING)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=ON, loads=OFF, 
+    bcs=OFF, predefinedFields=OFF, connectors=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=ON)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1921.65, 
+    farPlane=3130.31, width=1982.14, height=1003.42, cameraPosition=(2596.44, 
+    399.959, 570.571), cameraUpVector=(-0.278115, 0.954701, -0.105823), 
+    cameraTarget=(214.035, 495.375, -246.541))
+p = mdb.models['Model-1'].parts['chair']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=OFF, 
+    engineeringFeatures=OFF, mesh=ON)
+session.viewports['Viewport: 1'].partDisplay.meshOptions.setValues(
+    meshTechnique=ON)
+elemType1 = mesh.ElemType(elemCode=S4R, elemLibrary=STANDARD, 
+    secondOrderAccuracy=OFF)
+elemType2 = mesh.ElemType(elemCode=S3, elemLibrary=STANDARD)
+p = mdb.models['Model-1'].parts['chair']
+f = p.faces
+faces = f.getSequenceFromMask(mask=('[#3ff ]', ), )
+pickedRegions =(faces, )
+p.setElementType(regions=pickedRegions, elemTypes=(elemType1, elemType2))
+p = mdb.models['Model-1'].parts['chair']
+f = p.faces
+pickedRegions = f.getSequenceFromMask(mask=('[#3ff ]', ), )
+p.setMeshControls(regions=pickedRegions, elemShape=QUAD)
+p = mdb.models['Model-1'].parts['chair']
+p.generateMesh()
+a1 = mdb.models['Model-1'].rootAssembly
+a1.regenerate()
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=OFF, 
+    optimizationTasks=ON, geometricRestrictions=ON, stopConditions=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    optimizationTasks=OFF, geometricRestrictions=OFF, stopConditions=OFF)
+mdb.Job(name='Stepone', model='Model-1', description='', type=ANALYSIS, 
+    atTime=None, waitMinutes=0, waitHours=0, queue=None, memory=90, 
+    memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, 
+    explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, 
+    modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', 
+    scratch='', resultsFormat=ODB, numThreadsPerMpiProcess=1, 
+    multiprocessingMode=DEFAULT, numCpus=1, numGPUs=0)
+mdb.jobs['Stepone'].submit(consistencyChecking=OFF)
+#: The job input file "Stepone.inp" has been submitted for analysis.
+#: Job Stepone: Analysis Input File Processor completed successfully.
+#: Job Stepone: Abaqus/Standard completed successfully.
+#: Job Stepone completed successfully. 
+o3 = session.openOdb(
+    name='C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/Stepone.odb')
+#: Model: C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/Stepone.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       3
+#: Number of Node Sets:          3
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(plotState=(
+    CONTOURS_ON_DEF, ))
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=2 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=1 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=0 )
+mdb.save()
+#: The model database has been saved to "C:\Users\brijeshn\Documents\GitHub\FEM-Structures\Computer Exercise 2\chairGeometry_bleh.cae".
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].steps['Step-2'].resume()
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON, adaptiveMeshConstraints=OFF)
+a = mdb.models['Model-1'].rootAssembly
+region = a.surfaces['bottom']
+mdb.models['Model-1'].Pressure(name='Load-2', createStepName='Step-1', 
+    region=region, distributionType=UNIFORM, field='', magnitude=1.62)
+del mdb.models['Model-1'].loads['Load-2']
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1837.95, 
+    farPlane=3214.73, width=1902.03, height=959.714, cameraPosition=(2410.1, 
+    768.922, 960.03), cameraUpVector=(-0.38425, 0.90116, -0.200653), 
+    cameraTarget=(213.626, 496.184, -245.687))
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1778.02, 
+    farPlane=3274.91, width=1840.01, height=928.423, cameraPosition=(2299.11, 
+    1137.33, 1016.33), cameraUpVector=(-0.475395, 0.827147, -0.29971), 
+    cameraTarget=(213.367, 497.044, -245.556))
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1735.68, 
+    farPlane=3317.26, width=2467.52, height=1245.04, viewOffsetX=30.7644, 
+    viewOffsetY=-21.7559)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1624.85, 
+    farPlane=3399.33, width=2309.96, height=1165.54, cameraPosition=(1842.29, 
+    1525.93, 1356.75), cameraUpVector=(-0.502662, 0.723916, -0.472522), 
+    cameraTarget=(201.529, 495.112, -255.069), viewOffsetX=28.7999, 
+    viewOffsetY=-20.3667)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Step-2')
+a = mdb.models['Model-1'].rootAssembly
+region = a.surfaces['bottom']
+mdb.models['Model-1'].Pressure(name='Load-2', createStepName='Step-2', 
+    region=region, distributionType=UNIFORM, field='', magnitude=1.62, 
+    amplitude=UNSET)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=OFF, bcs=OFF, 
+    predefinedFields=OFF, connectors=OFF, adaptiveMeshConstraints=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON, adaptiveMeshConstraints=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=OFF, bcs=OFF, 
+    predefinedFields=OFF, connectors=OFF, adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].steps['Step-1'].suppress()
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON, adaptiveMeshConstraints=OFF)
+a = mdb.models['Model-1'].rootAssembly
+region = a.sets['BCS']
+mdb.models['Model-1'].EncastreBC(name='BC-2', createStepName='Step-2', 
+    region=region, localCsys=None)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=ON, loads=OFF, 
+    bcs=OFF, predefinedFields=OFF, connectors=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=OFF)
+mdb.Job(name='steptwo', model='Model-1', description='', type=ANALYSIS, 
+    atTime=None, waitMinutes=0, waitHours=0, queue=None, memory=90, 
+    memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, 
+    explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, 
+    modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', 
+    scratch='', resultsFormat=ODB, numThreadsPerMpiProcess=1, 
+    multiprocessingMode=DEFAULT, numCpus=1, numGPUs=0)
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+#: The job input file "steptwo.inp" has been submitted for analysis.
+#: Job steptwo: Analysis Input File Processor completed successfully.
+#: Job steptwo: Abaqus/Standard completed successfully.
+#: Job steptwo completed successfully. 
+session.viewports['Viewport: 1'].setValues(
+    displayedObject=session.odbs['C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/Stepone.odb'])
+o3 = session.openOdb(
+    name='C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/steptwo.odb')
+#: Model: C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/steptwo.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       3
+#: Number of Node Sets:          3
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(plotState=(
+    CONTOURS_ON_DEF, ))
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S11'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S22'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S33'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S12'), )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=1 )
+session.viewports['Viewport: 1'].partDisplay.setValues(mesh=OFF)
+session.viewports['Viewport: 1'].partDisplay.meshOptions.setValues(
+    meshTechnique=OFF)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=ON)
+p = mdb.models['Model-1'].parts['chair']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+mdb.saveAs(
+    pathName='C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/chairGeometry_linear.cae')
+#: The model database has been saved to "C:\Users\brijeshn\Documents\GitHub\FEM-Structures\Computer Exercise 2\chairGeometry_linear.cae".
+mdb.save()
+#: The model database has been saved to "C:\Users\brijeshn\Documents\GitHub\FEM-Structures\Computer Exercise 2\chairGeometry_linear.cae".
+mdb.save()
+#: The model database has been saved to "C:\Users\brijeshn\Documents\GitHub\FEM-Structures\Computer Exercise 2\chairGeometry_linear.cae".
+mdb.save()
+#: The model database has been saved to "C:\Users\brijeshn\Documents\GitHub\FEM-Structures\Computer Exercise 2\chairGeometry_linear.cae".
+session.viewports['Viewport: 1'].partDisplay.setValues(mesh=ON)
+session.viewports['Viewport: 1'].partDisplay.meshOptions.setValues(
+    meshTechnique=ON)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=OFF)
+elemType1 = mesh.ElemType(elemCode=S8R, elemLibrary=STANDARD)
+elemType2 = mesh.ElemType(elemCode=STRI65, elemLibrary=STANDARD)
+p = mdb.models['Model-1'].parts['chair']
+f = p.faces
+faces = f.getSequenceFromMask(mask=('[#3ff ]', ), )
+pickedRegions =(faces, )
+p.setElementType(regions=pickedRegions, elemTypes=(elemType1, elemType2))
+p = mdb.models['Model-1'].parts['chair']
+p.generateMesh()
+a1 = mdb.models['Model-1'].rootAssembly
+a1.regenerate()
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+mdb.Job(name='QUADsteptwo', model='Model-1', description='', type=ANALYSIS, 
+    atTime=None, waitMinutes=0, waitHours=0, queue=None, memory=90, 
+    memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, 
+    explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, 
+    modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', 
+    scratch='', resultsFormat=ODB, numThreadsPerMpiProcess=1, 
+    multiprocessingMode=DEFAULT, numCpus=1, numGPUs=0)
+mdb.jobs['QUADsteptwo'].submit(consistencyChecking=OFF)
+#: The job input file "QUADsteptwo.inp" has been submitted for analysis.
+#: Job QUADsteptwo: Analysis Input File Processor completed successfully.
+#: Job QUADsteptwo: Abaqus/Standard completed successfully.
+#: Job QUADsteptwo completed successfully. 
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=OFF, bcs=OFF, 
+    predefinedFields=OFF, connectors=OFF)
+session.viewports['Viewport: 1'].setValues(
+    displayedObject=session.odbs['C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/steptwo.odb'])
+o3 = session.openOdb(
+    name='C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb')
+#: Model: C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       4
+#: Number of Node Sets:          3
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(plotState=(
+    CONTOURS_ON_DEF, ))
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S12'), )
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=OFF, bcs=OFF, 
+    predefinedFields=OFF, connectors=OFF, adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].steps['Step-2'].suppress()
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Initial')
+mdb.models['Model-1'].steps['Step-1'].resume()
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=OFF)
+mdb.Job(name='Quadstep1', model='Model-1', description='', type=ANALYSIS, 
+    atTime=None, waitMinutes=0, waitHours=0, queue=None, memory=90, 
+    memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, 
+    explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, 
+    modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', 
+    scratch='', resultsFormat=ODB, numThreadsPerMpiProcess=1, 
+    multiprocessingMode=DEFAULT, numCpus=1, numGPUs=0)
+mdb.jobs['Quadstep1'].submit(consistencyChecking=OFF)
+#: The job input file "Quadstep1.inp" has been submitted for analysis.
+#: Job Quadstep1: Analysis Input File Processor completed successfully.
+#: Job Quadstep1: Abaqus/Standard completed successfully.
+#: Job Quadstep1 completed successfully. 
+session.viewports['Viewport: 1'].setValues(
+    displayedObject=session.odbs['C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb'])
+o3 = session.openOdb(
+    name='C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/Quadstep1.odb')
+#: Model: C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/Quadstep1.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       4
+#: Number of Node Sets:          3
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=2 )
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].setValues(
+    displayedObject=session.odbs['C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/Quadstep1.odb'])
+o3 = session.openOdb(
+    name='C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb')
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S33'), )
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(
+    plotState=CONTOURS_ON_DEF)
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S12'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S11'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S22'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S12'), )
+p = mdb.models['Model-1'].parts['chair']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=ON, 
+    engineeringFeatures=ON, mesh=OFF)
+session.viewports['Viewport: 1'].partDisplay.meshOptions.setValues(
+    meshTechnique=OFF)
+mdb.models['Model-1'].sections['Section-1'].setValues(preIntegrate=OFF, 
+    material='Material-1', thicknessType=UNIFORM, thickness=25.0, 
+    thicknessField='', nodalThicknessField='', idealization=NO_IDEALIZATION, 
+    integrationRule=SIMPSON, numIntPts=5)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+mdb.jobs['Quadstep1'].submit(consistencyChecking=OFF)
+#: The job input file "Quadstep1.inp" has been submitted for analysis.
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+#: Job Quadstep1: Analysis Input File Processor completed successfully.
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=OFF)
+#: Job Quadstep1: Abaqus/Standard completed successfully.
+#: Job Quadstep1 completed successfully. 
+session.viewports['Viewport: 1'].setValues(
+    displayedObject=session.odbs['C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb'])
+o3 = session.openOdb(
+    name='C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/Quadstep1.odb')
+#: Model: C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/Quadstep1.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       4
+#: Number of Node Sets:          3
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=2 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=1 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=2 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=1 )
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].steps['Step-2'].resume()
+mdb.models['Model-1'].steps['Step-1'].suppress()
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=OFF)
+mdb.jobs['QUADsteptwo'].submit(consistencyChecking=OFF)
+#: The job input file "QUADsteptwo.inp" has been submitted for analysis.
+#: Job QUADsteptwo: Analysis Input File Processor completed successfully.
+#: Job QUADsteptwo: Abaqus/Standard completed successfully.
+#: Job QUADsteptwo completed successfully. 
+session.viewports['Viewport: 1'].setValues(
+    displayedObject=session.odbs['C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/Quadstep1.odb'])
+o3 = session.openOdb(
+    name='C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb')
+#: Model: C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       4
+#: Number of Node Sets:          3
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S11'), )
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(
+    plotState=CONTOURS_ON_DEF)
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S22'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S33'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S12'), )
+p = mdb.models['Model-1'].parts['chair']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+mdb.models['Model-1'].sections['Section-1'].setValues(preIntegrate=OFF, 
+    material='Material-1', thicknessType=UNIFORM, thickness=35.0, 
+    thicknessField='', nodalThicknessField='', idealization=NO_IDEALIZATION, 
+    integrationRule=SIMPSON, numIntPts=5)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+mdb.jobs['QUADsteptwo'].submit(consistencyChecking=OFF)
+#: The job input file "QUADsteptwo.inp" has been submitted for analysis.
+#: Job QUADsteptwo: Analysis Input File Processor completed successfully.
+#: Job QUADsteptwo: Abaqus/Standard completed successfully.
+#: Job QUADsteptwo completed successfully. 
+session.viewports['Viewport: 1'].setValues(
+    displayedObject=session.odbs['C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb'])
+o3 = session.openOdb(
+    name='C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb')
+#: Model: C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       4
+#: Number of Node Sets:          3
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S11'), )
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(
+    plotState=CONTOURS_ON_DEF)
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S22'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S12'), )
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=OFF)
+p = mdb.models['Model-1'].parts['chair']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+mdb.models['Model-1'].sections['Section-1'].setValues(preIntegrate=OFF, 
+    material='Material-1', thicknessType=UNIFORM, thickness=40.0, 
+    thicknessField='', nodalThicknessField='', idealization=NO_IDEALIZATION, 
+    integrationRule=SIMPSON, numIntPts=5)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+mdb.jobs['QUADsteptwo'].submit(consistencyChecking=OFF)
+#: The job input file "QUADsteptwo.inp" has been submitted for analysis.
+#: Job QUADsteptwo: Analysis Input File Processor completed successfully.
+#: Job QUADsteptwo: Abaqus/Standard completed successfully.
+#: Job QUADsteptwo completed successfully. 
+session.viewports['Viewport: 1'].setValues(
+    displayedObject=session.odbs['C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb'])
+o3 = session.openOdb(
+    name='C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb')
+#: Model: C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       4
+#: Number of Node Sets:          3
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S11'), )
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(
+    plotState=CONTOURS_ON_DEF)
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S22'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S12'), )
+p = mdb.models['Model-1'].parts['chair']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+mdb.models['Model-1'].sections['Section-1'].setValues(preIntegrate=OFF, 
+    material='Material-1', thicknessType=UNIFORM, thickness=45.0, 
+    thicknessField='', nodalThicknessField='', idealization=NO_IDEALIZATION, 
+    integrationRule=SIMPSON, numIntPts=5)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+mdb.jobs['QUADsteptwo'].submit(consistencyChecking=OFF)
+#: The job input file "QUADsteptwo.inp" has been submitted for analysis.
+#: Job QUADsteptwo: Analysis Input File Processor completed successfully.
+#: Job QUADsteptwo: Abaqus/Standard completed successfully.
+#: Job QUADsteptwo completed successfully. 
+session.viewports['Viewport: 1'].setValues(
+    displayedObject=session.odbs['C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb'])
+o3 = session.openOdb(
+    name='C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb')
+#: Model: C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       4
+#: Number of Node Sets:          3
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S11'), )
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(
+    plotState=CONTOURS_ON_DEF)
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S22'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S12'), )
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+p = mdb.models['Model-1'].parts['chair']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=OFF)
+session.viewports['Viewport: 1'].setValues(
+    displayedObject=session.odbs['C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb'])
+o3 = session.openOdb(
+    name='C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb')
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S22'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S11'), )
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1624.98, 
+    farPlane=3303.91, width=1769.05, height=851.975, cameraPosition=(1475.55, 
+    1752.88, 1387.52), cameraUpVector=(-0.87253, 0.458176, -0.169605), 
+    cameraTarget=(206.121, 492.908, -245.135))
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1651.52, 
+    farPlane=3277.37, width=1797.94, height=865.892, cameraPosition=(1475.55, 
+    1752.88, 1387.52), cameraUpVector=(-0.722276, 0.578382, -0.379198), 
+    cameraTarget=(206.121, 492.908, -245.135))
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1652.13, 
+    farPlane=3276.76, width=1798.61, height=866.211, cameraPosition=(1475.55, 
+    1752.88, 1387.52), cameraUpVector=(-0.508414, 0.630933, -0.586036), 
+    cameraTarget=(206.121, 492.908, -245.135))
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1732.11, 
+    farPlane=3183.54, width=1885.68, height=908.146, cameraPosition=(1361.76, 
+    1151.94, 1780.67), cameraUpVector=(-0.376878, 0.80858, -0.451843), 
+    cameraTarget=(204.147, 482.481, -238.313))
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1665.71, 
+    farPlane=3249.93, width=2160.49, height=1040.49, viewOffsetX=2.84036, 
+    viewOffsetY=4.13698)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1619.88, 
+    farPlane=3306.22, width=2101.04, height=1011.87, cameraPosition=(1406.46, 
+    1589.09, 1551.96), cameraUpVector=(-0.462059, 0.686251, -0.561747), 
+    cameraTarget=(205.467, 489.464, -240.516), viewOffsetX=2.76221, 
+    viewOffsetY=4.02315)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1589.96, 
+    farPlane=3336.14, width=2276.92, height=1096.57, viewOffsetX=7.94769, 
+    viewOffsetY=11.6103)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1582.08, 
+    farPlane=3355.31, width=2265.64, height=1091.13, cameraPosition=(1485.67, 
+    1791.5, 1354.55), cameraUpVector=(-0.519398, 0.616914, -0.591307), 
+    cameraTarget=(208.182, 494.076, -242.084), viewOffsetX=7.9083, 
+    viewOffsetY=11.5528)
+p = mdb.models['Model-1'].parts['chair']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+mdb.models['Model-1'].sections['Section-1'].setValues(preIntegrate=OFF, 
+    material='Material-1', thicknessType=UNIFORM, thickness=30.0, 
+    thicknessField='', nodalThicknessField='', idealization=NO_IDEALIZATION, 
+    integrationRule=SIMPSON, numIntPts=5)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+mdb.jobs['QUADsteptwo'].submit(consistencyChecking=OFF)
+#: The job input file "QUADsteptwo.inp" has been submitted for analysis.
+#: Job QUADsteptwo: Analysis Input File Processor completed successfully.
+#: Job QUADsteptwo: Abaqus/Standard completed successfully.
+#: Job QUADsteptwo completed successfully. 
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Step-2')
+mdb.models['Model-1'].loads['Load-1'].resume()
+#* Cannot resume while the step is still suppressed.  Resume the step first.
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=OFF, bcs=OFF, 
+    predefinedFields=OFF, connectors=OFF, adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].steps['Step-1'].resume()
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON, adaptiveMeshConstraints=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=OFF, bcs=OFF, 
+    predefinedFields=OFF, connectors=OFF, adaptiveMeshConstraints=ON)
+mdb.models['Model-1'].steps['Step-1'].setValues(minEigen=0.0)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON, adaptiveMeshConstraints=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Step-1')
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=OFF, 
+    engineeringFeatures=OFF)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=ON)
+p = mdb.models['Model-1'].parts['chair']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+mdb.models['Model-1'].loads['Load-1'].setValues(magnitude=0.0103051948406655)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Step-2')
+mdb.models['Model-1'].loads['Load-2'].setValues(magnitude=0.0103051948406655)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=ON, loads=OFF, 
+    bcs=OFF, predefinedFields=OFF, connectors=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=ON)
+p = mdb.models['Model-1'].parts['chair']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+session.viewports['Viewport: 1'].partDisplay.setValues(mesh=ON)
+session.viewports['Viewport: 1'].partDisplay.meshOptions.setValues(
+    meshTechnique=ON)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=OFF)
+elemType1 = mesh.ElemType(elemCode=S4R, elemLibrary=STANDARD, 
+    secondOrderAccuracy=OFF, hourglassControl=DEFAULT)
+elemType2 = mesh.ElemType(elemCode=S3, elemLibrary=STANDARD)
+p = mdb.models['Model-1'].parts['chair']
+f = p.faces
+faces = f.getSequenceFromMask(mask=('[#3ff ]', ), )
+pickedRegions =(faces, )
+p.setElementType(regions=pickedRegions, elemTypes=(elemType1, elemType2))
+p = mdb.models['Model-1'].parts['chair']
+p.generateMesh()
+a1 = mdb.models['Model-1'].rootAssembly
+a1.regenerate()
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=OFF)
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=ON, 
+    engineeringFeatures=ON, mesh=OFF)
+session.viewports['Viewport: 1'].partDisplay.meshOptions.setValues(
+    meshTechnique=OFF)
+p = mdb.models['Model-1'].parts['chair']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+mdb.models['Model-1'].sections['Section-1'].setValues(preIntegrate=OFF, 
+    material='Material-1', thicknessType=UNIFORM, thickness=6.0, 
+    thicknessField='', nodalThicknessField='', idealization=NO_IDEALIZATION, 
+    integrationRule=SIMPSON, numIntPts=5)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=ON, loads=OFF, 
+    bcs=OFF, predefinedFields=OFF, connectors=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=ON)
+p = mdb.models['Model-1'].parts['chair']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=OFF, 
+    engineeringFeatures=OFF, mesh=ON)
+session.viewports['Viewport: 1'].partDisplay.meshOptions.setValues(
+    meshTechnique=ON)
+elemType1 = mesh.ElemType(elemCode=S8R, elemLibrary=STANDARD)
+elemType2 = mesh.ElemType(elemCode=STRI65, elemLibrary=STANDARD)
+p = mdb.models['Model-1'].parts['chair']
+f = p.faces
+faces = f.getSequenceFromMask(mask=('[#3ff ]', ), )
+pickedRegions =(faces, )
+p.setElementType(regions=pickedRegions, elemTypes=(elemType1, elemType2))
+p = mdb.models['Model-1'].parts['chair']
+p.generateMesh()
+a1 = mdb.models['Model-1'].rootAssembly
+a1.regenerate()
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=OFF)
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+#: The job input file "steptwo.inp" has been submitted for analysis.
+#: Job steptwo: Analysis Input File Processor completed successfully.
+#: Job steptwo: Abaqus/Standard completed successfully.
+#: Job steptwo completed successfully. 
+session.viewports['Viewport: 1'].setValues(
+    displayedObject=session.odbs['C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb'])
+o3 = session.openOdb(
+    name='C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/steptwo.odb')
+#: Warning: The output database 'C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/QUADsteptwo.odb' disk file has changed.
+#: 
+#: The current plot operation has been canceled, re-open the file to view the results
+#: Model: C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/steptwo.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       4
+#: Number of Node Sets:          3
+#: Number of Steps:              2
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=1, frame=1 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=1, frame=0 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=5 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=4 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=3 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=2 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=1 )
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(plotState=(
+    CONTOURS_ON_DEF, ))
+#: Warning: The selected Primary Variable is not available in the current step/frame.
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(plotState=(
+    UNDEFORMED, ))
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='U', outputPosition=NODAL, refinement=(INVARIANT, 
+    'Magnitude'), )
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(
+    plotState=CONTOURS_ON_DEF)
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=2 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=3 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=4 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=5 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=1, frame=0 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=1, frame=1 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=1, frame=1 )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(INVARIANT, 
+    'Mises'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S11'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(INVARIANT, 
+    'Min. Principal'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(INVARIANT, 
+    'Max. Principal'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(INVARIANT, 
+    'Min. Principal'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(INVARIANT, 
+    'Tresca'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(INVARIANT, 
+    'Max. Principal'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(INVARIANT, 
+    'Min. Principal'), )
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1681.48, 
+    farPlane=3241.5, width=1830.55, height=881.595, cameraPosition=(1537.59, 
+    1270.34, 1623.78), cameraUpVector=(-0.401723, 0.78215, -0.476299), 
+    cameraTarget=(207.298, 483.771, -240.664))
+session.viewports['Viewport: 1'].odbDisplay.basicOptions.setValues(
+    sectionResults=USE_ENVELOPE, envelopeCriteria=MIN_VALUE)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1652.63, 
+    farPlane=3208.87, width=1799.15, height=866.471, cameraPosition=(-829.176, 
+    -587.751, 1705.77), cameraUpVector=(-0.230483, 0.972998, -0.0123093), 
+    cameraTarget=(169.024, 453.723, -239.338))
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1818.19, 
+    farPlane=3058.04, width=1979.39, height=953.275, cameraPosition=(809.687, 
+    181.52, 2082.89), cameraUpVector=(-0.653189, 0.752959, -0.0799849), 
+    cameraTarget=(175.143, 456.595, -237.93))
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1797.9, 
+    farPlane=3078.33, width=1957.3, height=942.64, cameraPosition=(809.687, 
+    181.52, 2082.89), cameraUpVector=(-0.112804, 0.972938, -0.20166), 
+    cameraTarget=(175.143, 456.595, -237.93))
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1739.92, 
+    farPlane=3143.29, width=1894.18, height=912.24, cameraPosition=(1696.35, 
+    747.881, 1626.06), cameraUpVector=(-0.507056, 0.848496, -0.151486), 
+    cameraTarget=(181.121, 460.414, -241.01))
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1667.63, 
+    farPlane=3219.75, width=1815.48, height=874.337, cameraPosition=(2126.93, 
+    1271.17, 954.166), cameraUpVector=(-0.52182, 0.777696, -0.35056), 
+    cameraTarget=(184.635, 464.685, -246.494))
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1679.56, 
+    farPlane=3203.92, width=1828.47, height=880.594, cameraPosition=(1835.69, 
+    1217.37, 1357.96), cameraUpVector=(-0.453588, 0.792134, -0.40839), 
+    cameraTarget=(182.011, 464.2, -242.856))
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1577.27, 
+    farPlane=3441.04, width=2242.32, height=1131.41, cameraPosition=(-365.745, 
+    -1457.02, 1217.72), cameraUpVector=(0.344365, 0.748138, 0.567188), 
+    cameraTarget=(216.921, 508.925, -247.953), viewOffsetX=27.9565, 
+    viewOffsetY=-19.7703)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1627.74, 
+    farPlane=3390.57, width=1853.26, height=935.107, viewOffsetX=33.5406, 
+    viewOffsetY=-56.9938)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1856.08, 
+    farPlane=3041.77, width=2113.24, height=1066.29, cameraPosition=(265.292, 
+    265.153, 2187.67), cameraUpVector=(0.222435, 0.945297, -0.238615), 
+    cameraTarget=(208.565, 534.85, -317.66), viewOffsetX=38.2458, 
+    viewOffsetY=-64.989)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=2027.89, 
+    farPlane=2869.95, width=600.734, height=303.115, viewOffsetX=143.217, 
+    viewOffsetY=-364.297)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=2015.32, 
+    farPlane=3078.62, width=597.008, height=301.235, cameraPosition=(554.025, 
+    -256.549, 2159.41), cameraUpVector=(0.229275, 0.971239, -0.0642516), 
+    cameraTarget=(224.534, 529.327, -212.607), viewOffsetX=142.329, 
+    viewOffsetY=-362.038)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1957.31, 
+    farPlane=3186.96, width=579.825, height=292.565, cameraPosition=(-804.854, 
+    -490.536, 1900.87), cameraUpVector=(0.492514, 0.833298, 0.251087), 
+    cameraTarget=(269.624, 501.195, -152.074), viewOffsetX=138.232, 
+    viewOffsetY=-351.618)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1940.43, 
+    farPlane=3203.83, width=811.497, height=409.46, viewOffsetX=73.2432, 
+    viewOffsetY=-379.958)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1938.74, 
+    farPlane=2909.04, width=810.79, height=409.103, cameraPosition=(542.488, 
+    229.118, 2138), cameraUpVector=(0.232036, 0.945458, -0.228623), 
+    cameraTarget=(243.492, 592.34, -338.14), viewOffsetX=73.1794, 
+    viewOffsetY=-379.627)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=2019.64, 
+    farPlane=2828.14, width=211.651, height=106.794, viewOffsetX=-53.7007, 
+    viewOffsetY=-515.132)
+mdb.models['Model-1'].boundaryConditions['BC-1'].suppress()
+mdb.models['Model-1'].boundaryConditions['BC-2'].suppress()
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1988.11, 
+    farPlane=2859.67, width=425.214, height=214.552, viewOffsetX=48.3262, 
+    viewOffsetY=-500.062)
+a = mdb.models['Model-1'].rootAssembly
+v1 = a.instances['chair-1'].vertices
+verts1 = v1.getSequenceFromMask(mask=('[#280 ]', ), )
+region = a.Set(vertices=verts1, name='Set-2')
+mdb.models['Model-1'].DisplacementBC(name='BC-3', createStepName='Step-2', 
+    region=region, u1=UNSET, u2=UNSET, u3=0.0, ur1=UNSET, ur2=UNSET, ur3=UNSET, 
+    amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', 
+    localCsys=None)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=2013.74, 
+    farPlane=2834.04, width=251.594, height=126.948, viewOffsetX=35.8193, 
+    viewOffsetY=-495.489)
+a = mdb.models['Model-1'].rootAssembly
+e1 = a.instances['chair-1'].edges
+edges1 = e1.getSequenceFromMask(mask=('[#900 ]', ), )
+region = a.Set(edges=edges1, name='Set-3')
+mdb.models['Model-1'].DisplacementBC(name='BC-4', createStepName='Step-2', 
+    region=region, u1=UNSET, u2=0.0, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, 
+    amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', 
+    localCsys=None)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=2001.98, 
+    farPlane=2845.8, width=331.193, height=167.111, viewOffsetX=43.5393, 
+    viewOffsetY=-496.388)
+a = mdb.models['Model-1'].rootAssembly
+e1 = a.instances['chair-1'].edges
+edges1 = e1.getSequenceFromMask(mask=('[#100 ]', ), )
+region = a.Set(edges=edges1, name='Set-4')
+mdb.models['Model-1'].DisplacementBC(name='BC-5', createStepName='Step-2', 
+    region=region, u1=0.0, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, 
+    amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', 
+    localCsys=None)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1995.22, 
+    farPlane=2852.56, width=453.44, height=228.794, viewOffsetX=79.5335, 
+    viewOffsetY=-480.087)
+del mdb.models['Model-1'].boundaryConditions['BC-3']
+del mdb.models['Model-1'].boundaryConditions['BC-4']
+del mdb.models['Model-1'].boundaryConditions['BC-5']
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Step-1')
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Initial')
+a = mdb.models['Model-1'].rootAssembly
+v1 = a.instances['chair-1'].vertices
+verts1 = v1.getSequenceFromMask(mask=('[#280 ]', ), )
+region = a.Set(vertices=verts1, name='Set-5')
+mdb.models['Model-1'].DisplacementBC(name='BC-3', createStepName='Initial', 
+    region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, 
+    amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1988.07, 
+    farPlane=2859.71, width=451.813, height=227.973, cameraPosition=(545.831, 
+    228.73, 2137.54), cameraUpVector=(0.23718, 0.943977, -0.229461), 
+    cameraTarget=(246.835, 591.952, -338.601), viewOffsetX=79.2482, 
+    viewOffsetY=-478.365)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1941.48, 
+    farPlane=2758.27, width=441.224, height=222.63, cameraPosition=(-319.546, 
+    650.109, 2036.5), cameraUpVector=(0.378135, 0.884084, -0.274608), 
+    cameraTarget=(297.225, 577.849, -406.244), viewOffsetX=77.3909, 
+    viewOffsetY=-467.154)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1905.13, 
+    farPlane=2794.63, width=805.296, height=406.331, viewOffsetX=275.191, 
+    viewOffsetY=-344.888)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1842.93, 
+    farPlane=3042.41, width=779.005, height=393.065, cameraPosition=(1720.9, 
+    1129.29, 1562.85), cameraUpVector=(-0.126507, 0.787442, -0.603267), 
+    cameraTarget=(104.445, 528.344, -275.231), viewOffsetX=266.207, 
+    viewOffsetY=-333.628)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1897.84, 
+    farPlane=2987.49, width=381.791, height=192.642, viewOffsetX=133.207, 
+    viewOffsetY=-386.283)
+a = mdb.models['Model-1'].rootAssembly
+e1 = a.instances['chair-1'].edges
+edges1 = e1.getSequenceFromMask(mask=('[#900 ]', ), )
+region = a.Set(edges=edges1, name='Set-6')
+mdb.models['Model-1'].DisplacementBC(name='BC-4', createStepName='Initial', 
+    region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, 
+    amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+a = mdb.models['Model-1'].rootAssembly
+e1 = a.instances['chair-1'].edges
+edges1 = e1.getSequenceFromMask(mask=('[#100 ]', ), )
+region = a.Set(edges=edges1, name='Set-7')
+mdb.models['Model-1'].DisplacementBC(name='BC-5', createStepName='Initial', 
+    region=region, u1=SET, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, 
+    amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1855.59, 
+    farPlane=3029.74, width=800.533, height=403.928, viewOffsetX=170.254, 
+    viewOffsetY=-419.107)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1872.76, 
+    farPlane=3007.07, width=807.938, height=407.664, cameraPosition=(811.143, 
+    1112.5, 2039.05), cameraUpVector=(-0.132876, 0.831416, -0.539528), 
+    cameraTarget=(20.3065, 496.022, -273.343), viewOffsetX=171.829, 
+    viewOffsetY=-422.983)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1830.96, 
+    farPlane=3048.87, width=1233.1, height=622.191, viewOffsetX=166.543, 
+    viewOffsetY=-452.995)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=OFF, bcs=OFF, 
+    predefinedFields=OFF, connectors=OFF)
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+#: The job input file "steptwo.inp" has been submitted for analysis.
+#: Job steptwo: Analysis Input File Processor completed successfully.
+#: Job steptwo: Abaqus/Standard completed successfully.
+#: Job steptwo completed successfully. 
+session.viewports['Viewport: 1'].setValues(
+    displayedObject=session.odbs['C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/steptwo.odb'])
+o3 = session.openOdb(
+    name='C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/steptwo.odb')
+#: Model: C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/steptwo.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       8
+#: Number of Node Sets:          9
+#: Number of Steps:              2
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=1, frame=0 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=5 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=4 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=3 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=2 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=1 )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='U', outputPosition=NODAL, refinement=(INVARIANT, 
+    'Magnitude'), )
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(
+    plotState=CONTOURS_ON_DEF)
+session.viewports['Viewport: 1'].partDisplay.setValues(mesh=OFF)
+session.viewports['Viewport: 1'].partDisplay.meshOptions.setValues(
+    meshTechnique=OFF)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=ON)
+p = mdb.models['Model-1'].parts['chair']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=ON, 
+    engineeringFeatures=ON)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=OFF)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(
+    adaptiveMeshConstraints=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=ON, 
+    adaptiveMeshConstraints=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=ON)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1578.03, 
+    farPlane=3301.81, width=3146.05, height=1592.63, viewOffsetX=291.474, 
+    viewOffsetY=-550.839)
+session.viewports['Viewport: 1'].view.fitView()
+p = mdb.models['Model-1'].parts['chair']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=OFF, 
+    engineeringFeatures=OFF, mesh=ON)
+session.viewports['Viewport: 1'].partDisplay.meshOptions.setValues(
+    meshTechnique=ON)
+p = mdb.models['Model-1'].parts['chair']
+p.deleteMesh()
+p = mdb.models['Model-1'].parts['chair']
+p.seedPart(size=20.0, deviationFactor=0.1, minSizeFactor=0.1)
+p = mdb.models['Model-1'].parts['chair']
+p.generateMesh()
+elemType1 = mesh.ElemType(elemCode=S8R, elemLibrary=STANDARD)
+elemType2 = mesh.ElemType(elemCode=STRI65, elemLibrary=STANDARD)
+p = mdb.models['Model-1'].parts['chair']
+f = p.faces
+faces = f.getSequenceFromMask(mask=('[#3ff ]', ), )
+pickedRegions =(faces, )
+p.setElementType(regions=pickedRegions, elemTypes=(elemType1, elemType2))
+p = mdb.models['Model-1'].parts['chair']
+p.generateMesh()
+a1 = mdb.models['Model-1'].rootAssembly
+a1.regenerate()
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=OFF)
+mdb.jobs['steptwo'].submit(consistencyChecking=OFF)
+#: The job input file "steptwo.inp" has been submitted for analysis.
+#: Job steptwo: Analysis Input File Processor completed successfully.
+#: Job steptwo: Abaqus/Standard completed successfully.
+#: Job steptwo completed successfully. 
+session.viewports['Viewport: 1'].setValues(
+    displayedObject=session.odbs['C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/steptwo.odb'])
+o3 = session.openOdb(
+    name='C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/steptwo.odb')
+#: Model: C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/steptwo.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       8
+#: Number of Node Sets:          9
+#: Number of Steps:              2
+session.viewports['Viewport: 1'].setValues(displayedObject=o3)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=1, frame=0 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=5 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=4 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=3 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=2 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=1 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=0 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=1 )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='U', outputPosition=NODAL, refinement=(INVARIANT, 
+    'Magnitude'), )
+session.viewports['Viewport: 1'].odbDisplay.display.setValues(
+    plotState=CONTOURS_ON_DEF)
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='U', outputPosition=NODAL, refinement=(COMPONENT, 'U1'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='U', outputPosition=NODAL, refinement=(COMPONENT, 'U2'), )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=2 )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='U', outputPosition=NODAL, refinement=(INVARIANT, 
+    'Magnitude'), )
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Step-2')
+session.viewports['Viewport: 1'].view.setValues(nearPlane=2007.35, 
+    farPlane=3355.06, width=1476.87, height=745.188, viewOffsetX=-0.211067, 
+    viewOffsetY=-39.1383)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1946.08, 
+    farPlane=3387.86, width=1431.79, height=722.445, cameraPosition=(707.211, 
+    1669.44, 2092.53), cameraUpVector=(0.152364, 0.64393, -0.749759), 
+    cameraTarget=(190.863, 459.351, -243.692), viewOffsetX=-0.204625, 
+    viewOffsetY=-37.9438)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1952.8, 
+    farPlane=3381.15, width=1436.74, height=724.94, cameraPosition=(700.6, 
+    1671.1, 2093.13), cameraUpVector=(0.0323862, 0.673444, -0.738529), 
+    cameraTarget=(184.252, 461.011, -243.09), viewOffsetX=-0.205332, 
+    viewOffsetY=-38.0748)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1952.87, 
+    farPlane=3381.08, width=1436.79, height=724.967, cameraPosition=(698.59, 
+    1671.45, 2093.4), cameraUpVector=(-0.0040788, 0.67954, -0.733627), 
+    cameraTarget=(182.242, 461.357, -242.825), viewOffsetX=-0.205339, 
+    viewOffsetY=-38.0762)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1971.46, 
+    farPlane=3380.95, width=1450.47, height=731.869, cameraPosition=(-184.653, 
+    1685.94, 2114.42), cameraUpVector=(0.165321, 0.685338, -0.709212), 
+    cameraTarget=(190.205, 461.726, -241.358), viewOffsetX=-0.207294, 
+    viewOffsetY=-38.4387)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1865.82, 
+    farPlane=3486.6, width=2082.29, height=1050.67, viewOffsetX=81.7575, 
+    viewOffsetY=-125.108)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1926.72, 
+    farPlane=3467.51, width=2150.26, height=1084.96, cameraPosition=(376.619, 
+    1649.5, 2181.97), cameraUpVector=(0.243483, 0.662965, -0.70795), 
+    cameraTarget=(219.449, 482.85, -226.996), viewOffsetX=84.426, 
+    viewOffsetY=-129.191)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1727.81, 
+    farPlane=3558.03, width=1928.27, height=972.953, cameraPosition=(1495.11, 
+    2286.52, 1207.49), cameraUpVector=(-0.226373, 0.383284, -0.89546), 
+    cameraTarget=(174.677, 456.295, -240.148), viewOffsetX=75.7099, 
+    viewOffsetY=-115.853)
+session.viewports['Viewport: 1'].view.setValues(nearPlane=1752.99, 
+    farPlane=3532.85, width=1956.38, height=987.136, cameraPosition=(1439, 
+    2260.68, 1291.34), cameraUpVector=(-0.608993, 0.461371, -0.645185), 
+    cameraTarget=(118.565, 430.457, -156.301), viewOffsetX=76.8134, 
+    viewOffsetY=-117.542)
+session.viewports['Viewport: 1'].setValues(
+    displayedObject=session.odbs['C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/steptwo.odb'])
+odb = session.odbs['C:/Users/brijeshn/Documents/GitHub/FEM-Structures/Computer Exercise 2/steptwo.odb']
+session.viewports['Viewport: 1'].setValues(displayedObject=odb)
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=3 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=4 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=5 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=1, frame=0 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=1, frame=1 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=1, frame=1 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=1, frame=1 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=1, frame=1 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=1, frame=1 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=1, frame=1 )
+session.viewports['Viewport: 1'].odbDisplay.setFrame(step=1, frame=1 )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(INVARIANT, 
+    'Mises'), )
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(COMPONENT, 
+    'S12'), )
+mdb.save()
+#: The model database has been saved to "C:\Users\brijeshn\Documents\GitHub\FEM-Structures\Computer Exercise 2\chairGeometry_linear.cae".
+mdb.save()
+#: The model database has been saved to "C:\Users\brijeshn\Documents\GitHub\FEM-Structures\Computer Exercise 2\chairGeometry_linear.cae".
+mdb.save()
+#: The model database has been saved to "C:\Users\brijeshn\Documents\GitHub\FEM-Structures\Computer Exercise 2\chairGeometry_linear.cae".
+session.viewports['Viewport: 1'].partDisplay.setValues(mesh=OFF)
+session.viewports['Viewport: 1'].partDisplay.meshOptions.setValues(
+    meshTechnique=OFF)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=ON)
+p = mdb.models['Model-1'].parts['chair']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+mdb.save()
+#: The model database has been saved to "C:\Users\brijeshn\Documents\GitHub\FEM-Structures\Computer Exercise 2\chairGeometry_linear.cae".
+mdb.save()
+#: The model database has been saved to "C:\Users\brijeshn\Documents\GitHub\FEM-Structures\Computer Exercise 2\chairGeometry_linear.cae".
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=ON, 
+    engineeringFeatures=ON)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=OFF)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=OFF, bcs=OFF, 
+    predefinedFields=OFF, connectors=OFF, adaptiveMeshConstraints=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    predefinedFields=ON, connectors=ON, adaptiveMeshConstraints=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Initial')
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Step-2')
+mdb.save()
+#: The model database has been saved to "C:\Users\brijeshn\Documents\GitHub\FEM-Structures\Computer Exercise 2\chairGeometry_linear.cae".
